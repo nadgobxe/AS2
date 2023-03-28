@@ -90,16 +90,29 @@ function myLoadFunction() {
 	document.addEventListener("keyup", keyup);
 }
 
+function tankStart() {
+	var numberOfTanks = document.querySelectorAll('body > div.tank');
+	var randomTankFire = Math.floor(Math.random() * numberOfTanks.length);
+	var selectTank = numberOfTanks[randomTankFire];
+	for (var i = 0; i < numberOfTanks.length; i++) {	  
+		selectTank.style.display = "block";
+	}
+  };
 
 let startButton = document.getElementsByClassName('start');
 
 function startGame() {
 	startButton[0].style.display = "none";
-	// tank function here
+	tankStart()
 	console.log("test")
 }
 
-
+var numberOfTanks = document.querySelectorAll('body > div.tank');
+console.log(numberOfTanks);
+var randomTankFire = Math.floor(Math.random() * numberOfTanks.length);
+console.log(randomTankFire);
+var selectTank = numberOfTanks[randomTankFire];
+console.log(selectTank);
 
 if (startButton[0]) {
 	startButton[0].addEventListener('click', startGame);
