@@ -95,6 +95,7 @@ let startButton = document.getElementsByClassName('start');
 
 function startGame() {
 	startButton[0].style.display = "none";
+	// tank function here
 	console.log("test")
 }
 
