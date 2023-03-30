@@ -90,20 +90,23 @@ function myLoadFunction() {
 	document.addEventListener("keyup", keyup);
 }
 
-function tankStart() {
-	var numberOfTanks = document.querySelectorAll('body > div.tank');
-	var randomTankFire = Math.floor(Math.random() * numberOfTanks.length);
-	var selectTank = numberOfTanks[randomTankFire];
-	for (var i = 0; i < numberOfTanks.length; i++) {	  
+let startButton = document.getElementsByClassName('start'); // select start div
+
+function tankStart() {  // tank function
+	var numberOfTanks = document.querySelectorAll('body > div.tank'); // select all 3 tank class divs
+	var randomTankFire = Math.floor(Math.random() * numberOfTanks.length); // generate a random number based on the number of divs with tank class
+	var selectTank = numberOfTanks[randomTankFire]; // select on tank from all off them
+	numberOfTanks[randomTankFire].classList.add("explosion"); // add explosion class
+	console.log("test_start_tankstart");
+	for (var i = 0; i < numberOfTanks.length; i++) {	  // show the selected tank
 		selectTank.style.display = "block";
 	}
   };
 
-let startButton = document.getElementsByClassName('start');
 
 function startGame() {
-	startButton[0].style.display = "none";
-	tankStart()
+	startButton[0].style.display = "none"; // hide start div
+	tankStart() // call tankstart function
 	console.log("test")
 }
 
@@ -114,9 +117,10 @@ console.log(randomTankFire);
 var selectTank = numberOfTanks[randomTankFire];
 console.log(selectTank);
 
-if (startButton[0]) {
+if (startButton[0]) { // if startButton[ with the index of 0] = true please run the below
 	startButton[0].addEventListener('click', startGame);
 }
+
 
 // initial code that was not working
 // let startButton = document.getElementsByClassName('start');
