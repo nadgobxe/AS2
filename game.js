@@ -32,7 +32,7 @@ function move() {
 	var positionLeft = player.offsetLeft;
 	var positionTop = player.offsetTop;
 	if (downPressed) {
-		var newTop = positionTop + 2;
+		var newTop = positionTop + 1;
 
 		player.style.top = newTop + "px";
 
@@ -43,7 +43,7 @@ function move() {
 		}
 	}
 	if (upPressed) {
-		var newTop = positionTop - 3;
+		var newTop = positionTop - 1;
 
 		player.style.top = newTop + "px";
 
@@ -101,12 +101,12 @@ function tankStart() {  // tank function
 	for (var i = 0; i < numberOfTanks.length; i++) {	  // show the selected tank
 		selectTank.style.display = "block";
 	}
-  };
+};
 
-	var selectCactus = document.querySelectorAll("body >div.cactus");
-	var playerNew = document.querySelector("#player");
+var selectCactus = document.querySelectorAll("body >div.cactus");
+var playerNew = document.querySelector("#player");
 
-	
+
 function startGame() {
 	startButton[0].style.display = "none"; // hide start div
 	tankStart() // call tankstart function
@@ -118,39 +118,48 @@ function loadStartGame() { // load startGame()
 }
 
 function preventCollision(player, cactus) {
-	setInterval(function() {
-	  var playerRect = player.getBoundingClientRect();
-	  var cactusRect = cactus.getBoundingClientRect();
-	//   console.log(player.offsetWidth);
-	//   console.log(cactusRect.left);
-  
-	  if (playerRect.x + playerRect.width >= cactusRect.x &&
-		  playerRect.x <= cactusRect.x + cactusRect.width  &&
-		  playerRect.y + playerRect.height >= cactusRect.y &&
-		  playerRect.y <= cactusRect.y + cactusRect.height ) {
-		console.log("collision detected!");
-		console.log(playerRect.width);
-		// handle collision here, for example:
-		// player.style.display = "none";
+	setInterval(function () {
+		var playerRect = player.getBoundingClientRect();
+		var cactusRect = cactus.getBoundingClientRect();
+		//   console.log(player.offsetWidth);
+		//   console.log(cactusRect.left);
 
-		if (playerRect.x + playerRect.width >= cactusRect.x) {
-            player.style.left = (playerRect.x - 1) + "px";
-			console.log(playerRect.x)
-        }
-        if (playerRect.x <= cactusRect.x + cactusRect.width) {
-            player.style.left = (playerRect.x + 1) + "px";
-        }
-        if (playerRect.y + playerRect.height >= cactusRect.y) {
-            player.style.top = (playerRect.y - 1) + "px";
-        }
-        if (playerRect.y <= cactusRect.y + cactusRect.height) {
-            player.style.top = (playerRect.y + 1) + "px";
-        }
-	  }
+		if (playerRect.x + playerRect.width >= cactusRect.x &&
+			playerRect.x <= cactusRect.x + cactusRect.width &&
+			playerRect.y + playerRect.height >= cactusRect.y &&
+			playerRect.y <= cactusRect.y + cactusRect.height) {
+			console.log("collision detected!");
+			console.log("player width is:" + playerRect.width);
+			console.log("player x is:" + playerRect.x);
+			console.log("cactus x is:" + cactusRect.x);
+			console.log("player height is:" + playerRect.height);
+			console.log("player y is:" + playerRect.y);
+			console.log("cactus y is:" + cactusRect.y);
+			console.log("Cactus Height is:" + cactusRect.height)
+			// handle collision here, for example:
+			// player.style.display = "none";
+
+			if (playerRect.x - playerRect.width > cactusRect.x && leftPressed) {
+				player.style.left = (playerRect.x + 5) + "px";
+				console.log(playerRect.x + "coming from left");
+			}
+			if (playerRect.x < cactusRect.x + cactusRect.width && rightPressed) {
+				player.style.left = (playerRect.x - 5) + "px";
+				// console.log(playerRect.x + "coming from right");
+			}
+			if (playerRect.y + playerRect.height > cactusRect.y && downPressed) {
+				player.style.top = (playerRect.y - 5) + "px";
+				// console.log(playerRect.x + "from top");
+			}
+			if (playerRect.y < cactusRect.y + cactusRect.height && upPressed) {
+				player.style.top = (playerRect.y + 5) + "px";
+				// console.log(playerRect.x + "from bottom");
+			}
+		}
 	}, 10); // check for collision every 10 milliseconds
-  }
+}
 
-  preventCollision(playerNew, selectCactus[0]);
+preventCollision(playerNew, selectCactus[0]);
 
 // Testing Area
 var numberOfTanks = document.querySelectorAll('body > div.tank');
