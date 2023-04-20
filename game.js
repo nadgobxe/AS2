@@ -108,6 +108,36 @@ function tankStart(tank) {  // tank function
 	function generateRandomTank(tank) {
 		var randomTankPosition = Math.floor((Math.random() * (windowHeight - 150))); // generate a random number based on the number of divs with tank class
 		tank.style.top = randomTankPosition + "px";
+		
+		// var tankOne = tankArray[0].getBoundingClientRect();
+		// var tankTwo = tankArray[1].getBoundingClientRect();
+		// var tankThree = tankArray[2].getBoundingClientRect();
+		// console.log("Bouding Value is: " + tankOne.height);
+
+		// if (tankOne.y + tankOne.height <= tankTwo.y && tankOne.y <= tankTwo.y + tankTwo.height) {
+		// 	tankArray[0].style.top = tankOne.y + tankTwo.height + 10 + "px";
+		// 	console.log("collision detected tank 1 with tank2");
+		// } else if (tankTwo.y + tankTwo.height <= tankOne.y && tankTwo.y <= tankOne.y + tankOne.height) {
+		// 	tankArray[1].style.top = tankTwo.y + tankOne.height + 10 + "px";
+		// 	console.log("collision detected tank 2 with tank1");
+		// } 
+		//  else if (tankOne.y + tankOne.height <= tankThree.y && tankOne.y <= tankThree.y + tankThree.height) {
+		// 	tankArray[0].style.top = tankOne.y + tankThree.height + 10 + "px";
+		// 	console.log("collision detected tank 1 with tank3");
+		// } 
+		// else if (tankThree.y + tankThree.height <= tankOne.y && tankThree.y <= tankOne.y + tankOne.height) {
+		// 	tankArray[2].style.top = tankThree.y + tankOne.height + 10 + "px";
+		// 	console.log("collision detected tank 3 with tank 1");
+		// }
+		// else if (tankTwo.y + tankTwo.height <= tankThree.y && tankTwo.y <= tankThree.y + tankThree.height) {
+		// 	tankArray[2].style.top = tankTwo.y + tankThree.height + 10 + "px";
+		// 	console.log("collision detected tank 2 with tank 3");
+		// } else if (tankThree.y + tankThree.height <= tankTwo.y && tankThree.y <= tankTwo.y + tankTwo.height) {
+		// 	tankArray[1].style.top = tankThree.y + tankTwo.height + 10 + "px";
+		// 	console.log("collision detected tank 3 with tank 2");
+		// } else {
+		// 	return false;
+		// }
 	}
 
 	for (var i = 0; i < tankArray.length; i++) {
@@ -115,6 +145,7 @@ function tankStart(tank) {  // tank function
 		console.log(`test tankElement${tankElement}`);
 		generateRandomTank(tankElement);
 	}
+
 
 	console.log(one[0]);
 	console.log("Tank3 Position is:" + top);
