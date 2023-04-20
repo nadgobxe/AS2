@@ -118,11 +118,15 @@ function tankStart(tank) {  // tank function
 			var tankPosition = windowStart - tankStart;
 			var explosionMoment = (windowStart - tankPosition) + startPosition;
 			console.log("explosion location" + explosionMoment);
+			var explosionLocationCoordonates = 750;
+			var explosionLocation = document.querySelector("body");
+			explosionLocation.style.left =  explosionLocationCoordonates;
 			if (explosionMoment <= 750) {
-				// selectBomb[i].style.display = none;
+				selectBomb[i].style.display = "none";
 				var explosion = document.createElement('div')
 				explosion.className = 'explosion';
-				selectBomb.appendChild(explosion);
+				explosionLocation.appendChild(explosion);
+				clearInterval(timer);
 			}
 			selectBomb[i].style.left = startPosition - 1 + 'px';
 		}
@@ -137,39 +141,8 @@ function tankStart(tank) {  // tank function
 		tank.appendChild(bomb); // source https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild // https://stackoverflow.com/questions/49824383/javascript-document-createelement-not-showing-any-results
 
 		var timer = setInterval(move, 100);
-
-
-
-		// var tankOne = tankArray[0].getBoundingClientRect();
-		// var tankTwo = tankArray[1].getBoundingClientRect();
-		// var tankThree = tankArray[2].getBoundingClientRect();
-		// console.log("Bouding Value is: " + tankOne.height);
-
-		// if (tankOne.y + tankOne.height <= tankTwo.y && tankOne.y <= tankTwo.y + tankTwo.height) {
-		// 	tankArray[0].style.top = tankOne.y + tankTwo.height + 10 + "px";
-		// 	console.log("collision detected tank 1 with tank2");
-		// } else if (tankTwo.y + tankTwo.height <= tankOne.y && tankTwo.y <= tankOne.y + tankOne.height) {
-		// 	tankArray[1].style.top = tankTwo.y + tankOne.height + 10 + "px";
-		// 	console.log("collision detected tank 2 with tank1");
-		// } 
-		//  else if (tankOne.y + tankOne.height <= tankThree.y && tankOne.y <= tankThree.y + tankThree.height) {
-		// 	tankArray[0].style.top = tankOne.y + tankThree.height + 10 + "px";
-		// 	console.log("collision detected tank 1 with tank3");
-		// } 
-		// else if (tankThree.y + tankThree.height <= tankOne.y && tankThree.y <= tankOne.y + tankOne.height) {
-		// 	tankArray[2].style.top = tankThree.y + tankOne.height + 10 + "px";
-		// 	console.log("collision detected tank 3 with tank 1");
-		// }
-		// else if (tankTwo.y + tankTwo.height <= tankThree.y && tankTwo.y <= tankThree.y + tankThree.height) {
-		// 	tankArray[2].style.top = tankTwo.y + tankThree.height + 10 + "px";
-		// 	console.log("collision detected tank 2 with tank 3");
-		// } else if (tankThree.y + tankThree.height <= tankTwo.y && tankThree.y <= tankTwo.y + tankTwo.height) {
-		// 	tankArray[1].style.top = tankThree.y + tankTwo.height + 10 + "px";
-		// 	console.log("collision detected tank 3 with tank 2");
-		// } else {
-		// 	return false;
-		// }
-	}
+	
+	};
 
 	for (var i = 0; i < tankArray.length; i++) {
 		var tankElement = tankArray[i];
@@ -289,3 +262,37 @@ console.log(playerNew);
 
 document.addEventListener("DOMContentLoaded", myLoadFunction);
 document.addEventListener("DOMContentLoaded", loadStartGame); // Loads LoadStartGame()
+
+
+
+// avoid tank overlapping
+
+	// var tankOne = tankArray[0].getBoundingClientRect();
+		// var tankTwo = tankArray[1].getBoundingClientRect();
+		// var tankThree = tankArray[2].getBoundingClientRect();
+		// console.log("Bouding Value is: " + tankOne.height);
+
+		// if (tankOne.y + tankOne.height <= tankTwo.y && tankOne.y <= tankTwo.y + tankTwo.height) {
+		// 	tankArray[0].style.top = tankOne.y + tankTwo.height + 10 + "px";
+		// 	console.log("collision detected tank 1 with tank2");
+		// } else if (tankTwo.y + tankTwo.height <= tankOne.y && tankTwo.y <= tankOne.y + tankOne.height) {
+		// 	tankArray[1].style.top = tankTwo.y + tankOne.height + 10 + "px";
+		// 	console.log("collision detected tank 2 with tank1");
+		// } 
+		//  else if (tankOne.y + tankOne.height <= tankThree.y && tankOne.y <= tankThree.y + tankThree.height) {
+		// 	tankArray[0].style.top = tankOne.y + tankThree.height + 10 + "px";
+		// 	console.log("collision detected tank 1 with tank3");
+		// } 
+		// else if (tankThree.y + tankThree.height <= tankOne.y && tankThree.y <= tankOne.y + tankOne.height) {
+		// 	tankArray[2].style.top = tankThree.y + tankOne.height + 10 + "px";
+		// 	console.log("collision detected tank 3 with tank 1");
+		// }
+		// else if (tankTwo.y + tankTwo.height <= tankThree.y && tankTwo.y <= tankThree.y + tankThree.height) {
+		// 	tankArray[2].style.top = tankTwo.y + tankThree.height + 10 + "px";
+		// 	console.log("collision detected tank 2 with tank 3");
+		// } else if (tankThree.y + tankThree.height <= tankTwo.y && tankThree.y <= tankTwo.y + tankTwo.height) {
+		// 	tankArray[1].style.top = tankThree.y + tankTwo.height + 10 + "px";
+		// 	console.log("collision detected tank 3 with tank 2");
+		// } else {
+		// 	return false;
+		// }
