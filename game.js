@@ -92,24 +92,50 @@ function myLoadFunction() {
 
 let startButton = document.getElementsByClassName('start'); // select start div
 
-function tankStart() {  // tank function
-	var numberOfTanks = document.querySelectorAll('body > div.tank'); // select all 3 tank class divs
-	var randomTankFire = Math.floor(Math.random() * numberOfTanks.length); // generate a random number based on the number of divs with tank class
-	var selectTank = numberOfTanks[randomTankFire]; // select on tank from all off them
-	numberOfTanks[randomTankFire].classList.add("explosion"); // add explosion class
-	console.log("test_start_tankstart");
-	for (var i = 0; i < numberOfTanks.length; i++) {	  // show the selected tank
-		selectTank.style.display = "block";
+function tankStart(tank) {  // tank function
+
+	var windowHeight = window.innerHeight;
+	var left = tank.offsetLeft;
+	var top = tank.offsetTop;
+	var selectTank = document.getElementsByClassName("tank");
+
+	var one = document.getElementsByClassName("one");
+	var two = document.getElementsByClassName("two");
+	var three = document.getElementsByClassName("three");
+
+	var tankArray = [one[1], two[1], three[1]];
+
+	function generateRandomTank(tank) {
+		var randomTankPosition = Math.floor((Math.random() * (windowHeight - 150))); // generate a random number based on the number of divs with tank class
+		tank.style.top = randomTankPosition + "px";
 	}
+
+	for (var i = 0; i < tankArray.length; i++) {
+		var tankElement = tankArray[i];
+		console.log(`test tankElement${tankElement}`);
+		generateRandomTank(tankElement);
+	}
+
+	console.log(one[0]);
+	console.log("Tank3 Position is:" + top);
+	console.log(windowHeight);
+	console.log("my name is: " + tank);
+	console.log(two[0]);
 };
 
-var selectCactus = document.querySelectorAll("body >div.cactus");
+var selectCactus = document.getElementsByClassName('cactus');
+var selectTank = document.getElementsByClassName('tank');
 var playerNew = document.querySelector("#player");
 
 
 function startGame() {
 	startButton[0].style.display = "none"; // hide start div
-	tankStart() // call tankstart function
+	var selectTank = document.getElementsByClassName("tank");
+	for (var i = 0; i < selectTank.length; i++) {
+		tankIndex = i;
+		selectTank[tankIndex].style.display = "block";
+		tankStart(selectTank[tankIndex]);
+	};
 	console.log("test StartGame")
 }
 
@@ -159,7 +185,21 @@ function preventCollision(player, cactus) {
 	}, 10); // check for collision every 10 milliseconds
 }
 
-preventCollision(playerNew, selectCactus[0]);
+
+var cactusIndex
+
+for (var i = 0; i < selectCactus.length; i++) {
+	cactusIndex = i;
+	preventCollision(playerNew, selectCactus[cactusIndex]); // detect all cactus rather than use selectCactus[0];
+};
+
+var tankIndex
+
+for (var i = 0; i < selectTank.length; i++) {
+	tankIndex = i;
+	preventCollision(playerNew, selectTank[tankIndex]);
+};
+
 
 // Testing Area
 var numberOfTanks = document.querySelectorAll('body > div.tank');
@@ -187,4 +227,3 @@ console.log(playerNew);
 
 document.addEventListener("DOMContentLoaded", myLoadFunction);
 document.addEventListener("DOMContentLoaded", loadStartGame); // Loads LoadStartGame()
-document.addEventListener("DOMContentLoaded", detectCollision);
