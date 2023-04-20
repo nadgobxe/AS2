@@ -190,7 +190,7 @@ var cactusIndex
 
 for (var i = 0; i < selectCactus.length; i++) {
 	cactusIndex = i;
-	preventCollision(playerNew, selectCactus[cactusIndex]); // detect all cactus rather than use selectCactus[0];
+	preventCollision(playerNew, selectCactus[cactusIndex]); // select all cactus rather than use selectCactus[0];
 };
 
 var tankIndex
