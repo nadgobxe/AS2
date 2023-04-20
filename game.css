@@ -439,7 +439,8 @@ aside ul {list-style-type: none; margin-left: 0; padding-left: 0; margin-bottom:
 	height: 10px;
 	position: absolute;
 	background-position: -96px -401px;
-	transform: rotate(90deg)
+	transform: rotate(180deg);
+	z-index: -1;
 }
 
 .start:before {

@@ -105,10 +105,41 @@ function tankStart(tank) {  // tank function
 
 	var tankArray = [one[1], two[1], three[1]];
 
+
+	function move() {
+		var selectBomb = document.getElementsByClassName('bomb');
+		for (var i = 0; i < selectBomb.length; i++) {
+			var startPosition = selectBomb[i].offsetLeft;
+			console.log(startPosition);
+			var windowStart = window.innerWidth;
+			console.log(windowStart);
+			var tankStart = selectTank[0].offsetLeft;
+			console.log(tankStart);
+			var tankPosition = windowStart - tankStart;
+			var explosionMoment = (windowStart - tankPosition) + startPosition;
+			console.log("explosion location" + explosionMoment);
+			if (explosionMoment <= 750) {
+				// selectBomb[i].style.display = none;
+				var explosion = document.createElement('div')
+				explosion.className = 'explosion';
+				selectBomb.appendChild(explosion);
+			}
+			selectBomb[i].style.left = startPosition - 1 + 'px';
+		}
+	}
+
 	function generateRandomTank(tank) {
 		var randomTankPosition = Math.floor((Math.random() * (windowHeight - 150))); // generate a random number based on the number of divs with tank class
 		tank.style.top = randomTankPosition + "px";
-		
+		var bomb = document.createElement('div');
+		bomb.className = "bomb";
+		bomb.style.top = tank.style.width + 10 + "px";
+		tank.appendChild(bomb); // source https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild // https://stackoverflow.com/questions/49824383/javascript-document-createelement-not-showing-any-results
+
+		var timer = setInterval(move, 100);
+
+
+
 		// var tankOne = tankArray[0].getBoundingClientRect();
 		// var tankTwo = tankArray[1].getBoundingClientRect();
 		// var tankThree = tankArray[2].getBoundingClientRect();
@@ -176,7 +207,7 @@ function loadStartGame() { // load startGame()
 
 function preventCollision(player, cactus) {
 	setInterval(function () {
-		var playerRect = player.getBoundingClientRect();
+		var playerRect = player.getBoundingClientRect(); //https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
 		var cactusRect = cactus.getBoundingClientRect();
 		//   console.log(player.offsetWidth);
 		//   console.log(cactusRect.left);
