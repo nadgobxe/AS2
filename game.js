@@ -31,41 +31,48 @@ function move() {
 	var player = document.getElementById("player");
 	var positionLeft = player.offsetLeft;
 	var positionTop = player.offsetTop;
+
 	if (downPressed) {
 		var newTop = positionTop + 1;
+		var element = document.elementsFromPoint(positionLeft, newTop + 46);
 
-		player.style.top = newTop + "px";
-
-		if (leftPressed == false) {
-			if (rightPressed == false) {
-				player.className = "character walk down";
-			}
+		if (element.classList.contains('cactus') == false) {
+			player.style.top = newTop + "px";
 		}
+		player.className = "character walk down";
+
+
 	}
 	if (upPressed) {
 		var newTop = positionTop - 1;
+		var element = document.elementsFromPoint(positionLeft, newTop);
 
-		player.style.top = newTop + "px";
-
-		if (leftPressed == false) {
-			if (rightPressed == false) {
-				player.className = "character walk up";
-			}
+		if (element.classList.contains('cactus') == false) {
+			player.style.top = newTop + "px";
 		}
+		player.className = "character walk up";
 	}
 	if (leftPressed) {
 		var newLeft = positionLeft - 1;
+		var collisionDetectLeft = document.elementsFromPoint(newLeft, positionTop);
 
-		player.style.left = newLeft + "px";
+		console.log("collision Detect Left Value is :" + collisionDetectLeft);
+
+		if (collisionDetectLeft.classList.contains('cactus') == false) {
+			player.style.left = newLeft + "px";
+		}
 
 		player.className = "character walk left";
 	}
 	if (rightPressed) {
 		var newLeft = positionLeft + 1;
+		var collisionDetectRight = document.elementsFromPoint(newLeft + 32, positionTop);
 
-		player.style.left = newLeft + "px";
+		if (collisionDetectLeft.classList.contains('cactus') == false) {
+			player.style.left = newLeft + "px";
 
-		player.className = "character walk right";
+			player.className = "character walk right";
+		}
 	}
 }
 
@@ -120,7 +127,7 @@ function tankStart(tank) {  // tank function
 			console.log("explosion location" + explosionMoment);
 			var explosionLocationCoordonates = 750;
 			var explosionLocation = document.querySelector("body");
-			explosionLocation.style.left =  explosionLocationCoordonates;
+			explosionLocation.style.left = explosionLocationCoordonates;
 			if (explosionMoment <= 750) {
 				selectBomb[i].style.display = "none";
 				var explosion = document.createElement('div')
@@ -141,7 +148,7 @@ function tankStart(tank) {  // tank function
 		tank.appendChild(bomb); // source https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild // https://stackoverflow.com/questions/49824383/javascript-document-createelement-not-showing-any-results
 
 		var timer = setInterval(move, 100);
-	
+
 	};
 
 	for (var i = 0; i < tankArray.length; i++) {
@@ -166,11 +173,11 @@ var playerNew = document.querySelector("#player");
 function startGame() {
 	startButton[0].style.display = "none"; // hide start div
 	var selectTank = document.getElementsByClassName("tank");
-	for (var i = 0; i < selectTank.length; i++) {
-		tankIndex = i;
-		selectTank[tankIndex].style.display = "block";
-		tankStart(selectTank[tankIndex]);
-	};
+	// for (var i = 0; i < selectTank.length; i++) {
+	// 	tankIndex = i;
+	// 	selectTank[tankIndex].style.display = "block";
+	// 	tankStart(selectTank[tankIndex]);
+	// };
 	console.log("test StartGame")
 }
 
@@ -178,62 +185,62 @@ function loadStartGame() { // load startGame()
 	startButton[0].addEventListener('click', startGame);
 }
 
-function preventCollision(player, cactus) {
-	setInterval(function () {
-		var playerRect = player.getBoundingClientRect(); //https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
-		var cactusRect = cactus.getBoundingClientRect();
-		//   console.log(player.offsetWidth);
-		//   console.log(cactusRect.left);
+// function preventCollision(player, cactus) {
+// 	setInterval(function () {
+// 		var playerRect = player.getBoundingClientRect(); //https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+// 		var cactusRect = cactus.getBoundingClientRect();
+// 		//   console.log(player.offsetWidth);
+// 		//   console.log(cactusRect.left);
 
-		if (playerRect.x + playerRect.width >= cactusRect.x &&
-			playerRect.x <= cactusRect.x + cactusRect.width &&
-			playerRect.y + playerRect.height >= cactusRect.y &&
-			playerRect.y <= cactusRect.y + cactusRect.height) {
-			console.log("collision detected!");
-			console.log("player width is:" + playerRect.width);
-			console.log("player x is:" + playerRect.x);
-			console.log("cactus x is:" + cactusRect.x);
-			console.log("player height is:" + playerRect.height);
-			console.log("player y is:" + playerRect.y);
-			console.log("cactus y is:" + cactusRect.y);
-			console.log("Cactus Height is:" + cactusRect.height)
-			// handle collision here, for example:
-			// player.style.display = "none";
+// 		if (playerRect.x + playerRect.width >= cactusRect.x &&
+// 			playerRect.x <= cactusRect.x + cactusRect.width &&
+// 			playerRect.y + playerRect.height >= cactusRect.y &&
+// 			playerRect.y <= cactusRect.y + cactusRect.height) {
+// 			console.log("collision detected!");
+// 			console.log("player width is:" + playerRect.width);
+// 			console.log("player x is:" + playerRect.x);
+// 			console.log("cactus x is:" + cactusRect.x);
+// 			console.log("player height is:" + playerRect.height);
+// 			console.log("player y is:" + playerRect.y);
+// 			console.log("cactus y is:" + cactusRect.y);
+// 			console.log("Cactus Height is:" + cactusRect.height)
+// 			// handle collision here, for example:
+// 			// player.style.display = "none";
 
-			if (playerRect.x - playerRect.width > cactusRect.x && leftPressed) {
-				player.style.left = (playerRect.x + 5) + "px";
-				console.log(playerRect.x + "coming from left");
-			}
-			if (playerRect.x < cactusRect.x + cactusRect.width && rightPressed) {
-				player.style.left = (playerRect.x - 5) + "px";
-				// console.log(playerRect.x + "coming from right");
-			}
-			if (playerRect.y + playerRect.height > cactusRect.y && downPressed) {
-				player.style.top = (playerRect.y - 5) + "px";
-				// console.log(playerRect.x + "from top");
-			}
-			if (playerRect.y < cactusRect.y + cactusRect.height && upPressed) {
-				player.style.top = (playerRect.y + 5) + "px";
-				// console.log(playerRect.x + "from bottom");
-			}
-		}
-	}, 10); // check for collision every 10 milliseconds
-}
+// 			if (playerRect.x - playerRect.width > cactusRect.x && leftPressed) {
+// 				player.style.left = (playerRect.x + 5) + "px";
+// 				console.log(playerRect.x + "coming from left");
+// 			}
+// 			if (playerRect.x < cactusRect.x + cactusRect.width && rightPressed) {
+// 				player.style.left = (playerRect.x - 5) + "px";
+// 				// console.log(playerRect.x + "coming from right");
+// 			}
+// 			if (playerRect.y + playerRect.height > cactusRect.y && downPressed) {
+// 				player.style.top = (playerRect.y - 5) + "px";
+// 				// console.log(playerRect.x + "from top");
+// 			}
+// 			if (playerRect.y < cactusRect.y + cactusRect.height && upPressed) {
+// 				player.style.top = (playerRect.y + 5) + "px";
+// 				// console.log(playerRect.x + "from bottom");
+// 			}
+// 		}
+// 	}, 10); // check for collision every 10 milliseconds
+// }
 
 
-var cactusIndex
+// var cactusIndex
 
-for (var i = 0; i < selectCactus.length; i++) {
-	cactusIndex = i;
-	preventCollision(playerNew, selectCactus[cactusIndex]); // select all cactus rather than use selectCactus[0];
-};
+// for (var i = 0; i < selectCactus.length; i++) {
+// 	cactusIndex = i;
+// 	preventCollision(playerNew, selectCactus[cactusIndex]); // select all cactus rather than use selectCactus[0];
+// };
 
-var tankIndex
+// var tankIndex
 
-for (var i = 0; i < selectTank.length; i++) {
-	tankIndex = i;
-	preventCollision(playerNew, selectTank[tankIndex]);
-};
+// for (var i = 0; i < selectTank.length; i++) {
+// 	tankIndex = i;
+// 	preventCollision(playerNew, selectTank[tankIndex]);
+// };
 
 
 // Testing Area
@@ -278,11 +285,11 @@ document.addEventListener("DOMContentLoaded", loadStartGame); // Loads LoadStart
 		// } else if (tankTwo.y + tankTwo.height <= tankOne.y && tankTwo.y <= tankOne.y + tankOne.height) {
 		// 	tankArray[1].style.top = tankTwo.y + tankOne.height + 10 + "px";
 		// 	console.log("collision detected tank 2 with tank1");
-		// } 
+		// }
 		//  else if (tankOne.y + tankOne.height <= tankThree.y && tankOne.y <= tankThree.y + tankThree.height) {
 		// 	tankArray[0].style.top = tankOne.y + tankThree.height + 10 + "px";
 		// 	console.log("collision detected tank 1 with tank3");
-		// } 
+		// }
 		// else if (tankThree.y + tankThree.height <= tankOne.y && tankThree.y <= tankOne.y + tankOne.height) {
 		// 	tankArray[2].style.top = tankThree.y + tankOne.height + 10 + "px";
 		// 	console.log("collision detected tank 3 with tank 1");
