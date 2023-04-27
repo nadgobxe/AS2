@@ -38,7 +38,7 @@ aside ul {list-style-type: none; margin-left: 0; padding-left: 0; margin-bottom:
 #opponent .body {background-image: url(images/body1.png);}
 #opponent .head {background-image: url(images/head1.png);}
 
-.tank {background-image: url(images/tank.png);position: absolute; height: 68px; width: 151px; background-size: contain; background-repeat: no-repeat; display: none;}
+.tank {background-image: url(images/tank.png);position: absolute; height: 68px; width: 151px; background-size: contain; background-repeat: no-repeat;}
 .tank.one {left: 80%;}
 .tank.two {top: 50vh; left: 80%;}
 .tank.three {top: 70vh; left: 80%;}
