@@ -7,7 +7,7 @@ var lastPressed = false;
 var timeout = 0;
 
 var selectStartBar = document.getElementsByClassName('start')[0]; //select Start Bar
-var selectTanks = document.getElementsByClassName('tanks'); // select tanks
+var selectTanks = document.getElementsByClassName('tank'); // select tanks
 
 
 
@@ -83,6 +83,13 @@ function loopItems(param, loopFunction) { // reusable function param = item sele
 	}
 }
 
+function addBomb(tank) {
+	var tankPosition = tank.offsetTop;
+	var addBombs = document.createElement('div');
+	addBombs.classList.add('bombs');
+	addBombs.style.top = tankPosition + 10 + "px";
+}
+
 
 function randomTanksSpawn(tank) {
 	var randomize = Math.floor(Math.random() * window.innerHeight); // generate random number
@@ -97,15 +104,21 @@ function myLoadFunction() {
 	document.addEventListener('keydown', keydown);
 	document.addEventListener('keyup', keyup);
 
-
+	for (var i = 0; i < selectTanks.length; i++) {
+		selectTanks[i].style.display = "none";
+	}
 	selectStartBar.addEventListener('click', startGame);
 }
 
 function startGame() {
-	// tank starting to fire
 	selectStartBar.style.display = "none";
-	selectTanks.style.display = "none";
-	randomTanksSpawn(selectTanks[0]);
+	// tank starting to fire
+	for (var i = 0; i < selectTanks.length; i++) {
+		selectTanks[i].style.display = "display";
+		randomTanksSpawn(selectTanks[i]);
+		addBomb(selectTanks[i]);
+	}
+
 }
 
 document.addEventListener('DOMContentLoaded', myLoadFunction);
