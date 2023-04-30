@@ -107,8 +107,6 @@ function addBomb(tank) { //add bomb
 }
 
 
-
-
 function moveBomb() { //move bomb
 	var bombs = document.getElementsByClassName('bomb');
 
@@ -139,9 +137,7 @@ function moveBomb() { //move bomb
 		}
 		/// Start Life Counting ///
 
-		var healthDiv = document.getElementsByClassName('health')[0];
-		var lifeBalls = healthDiv.getElementsByTagName('li');
-		var lifeCount = lifeBalls.length;
+
 
 		if (left >= 1) {
 			console.log(left);
@@ -154,10 +150,14 @@ function moveBomb() { //move bomb
 
 				console.log("My number of lifes is" + lifeCount); // check my logic
 
+				var healthDiv = document.getElementsByClassName('health')[0];
+				var lifeBalls = healthDiv.getElementsByTagName('li');
+				var lifeCount = lifeBalls.length;
+
 				if (lifeCount >= 1) {
 
-					healthDiv.removeChild(lifeBalls[0]); // Remove a life ball from the DOM
-					lifeCount--;
+				// call lifeCount()
+				lifeCountHealthBalls();
 				}
 
 
@@ -186,6 +186,17 @@ function moveBomb() { //move bomb
 	}
 }
 
+function lifeCountHealthBalls() {
+	var healthDiv = document.getElementsByClassName('health')[0];
+	var lifeBalls = healthDiv.getElementsByTagName('li');
+	var lifeCount = [lifeBalls[0], lifeBalls[1], lifeBalls[2]];
+	console.log(lifeCount);
+	indexLifeValue = healthDiv.firstChild;
+	console.log("indexLifeValue:" + indexLifeValue);
+	healthDiv.removeChild(indexLifeValue); // Remove a life ball from the DOM
+	console.log("BOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM")
+}
+
 function myLoadFunction() {
 	timeout = setInterval(move, 10); /* This line constantly checks if any of the below statements are true or not: 'keydown' or 'keyup'. If I press the "left key," the 'keydown' function will execute and start moving the player towards the left. When I release the left key, the 'keyup' function comes into action and player stops moving. */
 	document.addEventListener('keydown', keydown); /* trigger for move function */
@@ -197,7 +208,9 @@ function startGame() {
 	var selectStartButton = document.getElementsByClassName('start');  /* Selects HTML elements with the class 'start' */
 	selectStartButton[0].style.display = 'none'; /*Removes the start bar */
 
-	var bombs = document.getElementsByClassName('bomb'); // select bombs element from DOM 
+	var bombs = document.getElementsByClassName('bomb'); // select bombs element from DOM
+	var tanks = document.getElementsByClassName('tanks');
+
 	function repeatBomb() {
 		for (var i = 0; i < tankArray.length; i++) { // add bomb to each tank start position
 			var tankElement = tankArray[i];
@@ -205,40 +218,43 @@ function startGame() {
 		}
 	}
 
-	var repeatBombInterval = setInterval(repeatBomb, 2500); // add bombs each 2.5 secs
+	var repeatBombInterval = setInterval(repeatBomb, 15000); // add bombs each 15 secs
 
 	function removeBombInterval() {  // function to stop bombs when gameover (bomb collides with player)
 		for (var i = 0; i < bombs.length; i++) {  // loop through all bombs
+
 			var left = bombs[i].offsetLeft;
 			var top = bombs[i].offsetTop;
+
 			var elementBomb = document.elementFromPoint(left, top);
-			if (elementBomb.classList.contains('head') || elementBomb.classList.contains('body')) {
-				clearInterval(repeatBombInterval); // stop bombs when gameover (bomb collides with player)
+
+			if (elementBomb.classList.contains('head') || elementBomb.classList.contains('body')) { // <--- || tanks.length == 0 
+				clearInterval(repeatBombInterval); // stop bombs when gameover (bomb collides with player) //ref: https://www.tutorialrepublic.com/faq/how-to-stop-setinterval-call-in-javascript.php#:~:text=Answer%3A%20Use%20the%20clearInterval(),or%20stop%20setInterval()%20call.
 			}
 		}
 	}
 
 	setInterval(removeBombInterval, 10); // check for collisions every 10ms
 }
-	function refreshGame() { //reset game
-		var gameOver = document.getElementsByClassName('gameover')[0]; //switch hud bar from gameover to start game
-		gameOver.classList.remove('gameover');
-		gameOver.classList.add('start');
-		gameOver.style.display = "block";
+function refreshGame() { //reset game
+	var gameOver = document.getElementsByClassName('gameover')[0]; //switch hud bar from gameover to start game
+	gameOver.classList.remove('gameover');
+	gameOver.classList.add('start');
+	gameOver.style.display = "block";
 
-		var player = document.getElementById('player'); // restore player position and class
-		player.className = 'character stand';
-		player.style.top = "80vh";
-		player.style.left = "200px";
+	var player = document.getElementById('player'); // restore player position and class
+	player.className = 'character stand';
+	player.style.top = "80vh";
+	player.style.left = "200px";
 
-		for (var i = 0; i < 3; i++) { //restore no of lifes
-			var healthDiv = document.getElementsByClassName('health')[0];
-			var li = document.createElement("li");
-			healthDiv.appendChild(li);
-		}
-
-		startGame();
+	for (var i = 0; i < 3; i++) { //restore no of lifes
+		var healthDiv = document.getElementsByClassName('health')[0];
+		var li = document.createElement("li");
+		healthDiv.appendChild(li);
 	}
 
-	document.addEventListener('click', startGame);
-	document.addEventListener('DOMContentLoaded', myLoadFunction);
+	startGame();
+}
+
+document.addEventListener('click', startGame);
+document.addEventListener('DOMContentLoaded', myLoadFunction);
