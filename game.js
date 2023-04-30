@@ -85,10 +85,10 @@ function loopItems(param, loopFunction) { // reusable function param = item sele
 
 function addBomb(tank) {
 	var tankPosition = tank.offsetTop;
-	var addBombs = document.createElement('div');
-	addBombs.classList.add('bomb');
-	tank.appendChild('bomb')
-	addBombs.style.top = tankPosition + 10 + "px";
+	var bomb = document.createElement('div');
+	bomb.className = "bomb";
+	bomb.style.top = tank.style.width + 10 + "px";
+	tank.appendChild(bomb)
 }
 
 
