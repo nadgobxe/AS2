@@ -75,35 +75,29 @@ function keydown(event) {
 	}
 }
 
-function bombExplosion() {
-	var selectBombs = document.getElementsByClassName('bomb')[0];
-	var left = selectBombs.offsetLeftl
-	windowWidth = window.innerWidth;
-	var tankLocation = document.getElementsByClassName('tank')[0];
-
-
-	if (left <= 0) {
-		console.log("STOPPPPP");
-		console.log("left is" + left);
-		console.log
-	}
-}
-
 function moveBomb(elBomb) {
 	var bombLeft = elBomb.offsetLeft;
-	elBomb.style.left = bombLeft - 1 + "px";
+
+	if (bombLeft >= 0) {
+		elBomb.style.left = bombLeft - 1 + "px";
+	}	else {
+		var explosion = document.createElement('div');
+		explosion.classList.add('explosion');
+		elBomb.appendChild(explosion);
+		elBomb.classList.remove('bomb');
+		
+		console.log("Stoppppppppppp")}
+			
 }
 
 function addBomb(tank) {
 	var bomb = document.createElement('div');
-	left = tank.offsetLeft;
-	top = tank.offsetTop + 151;
-	bomb.className = "bomb";
-	bomb.style.top = top + 10 + "px";
-	bomb.style.left = left + "px";
-	bomb.style.position = "absolute";
+	bomb.classList.add('bomb');
 	var body = document.body;
 	body.appendChild(bomb);
+	bomb.style.top = tank.offsetTop + 10 + 'px';
+	bomb.style.left = tank.offsetLeft + 'px';
+	bomb.style.position = "absolute";
 }
 
 // end bomb settings
@@ -151,7 +145,7 @@ function startGame() {
 	selectStartBar.style.display = "none";
 
 	triggerTankSpawn(); // tank spawn
-	
+
 	setInterval(function () {
 		triggerMoveBomb(moveBomb);
 	}, 10); // ignite bomb movement	
