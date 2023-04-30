@@ -76,11 +76,9 @@ function keydown(event) {
 }
 
 
-
-function loopItems(param, loopFunction) { // reusable function param = item select via for loop (tank, bomb, explosion etc) and loopFunction is the traget function like (randomTanks)
-	for (var i = 0; i < param.length; i++) {
-		loopFunction(param[i]);
-	}
+function moveBomb(elBomb) {
+	var bombLeft = elBomb.offsetLeft;
+	elBomb.style.left = bombLeft - 1 + "px";
 }
 
 function addBomb(tank) {
@@ -88,7 +86,7 @@ function addBomb(tank) {
 	var bomb = document.createElement('div');
 	bomb.className = "bomb";
 	bomb.style.top = tank.style.width + 10 + "px";
-	tank.appendChild(bomb)
+	tank.appendChild(bomb);
 }
 
 
@@ -113,13 +111,17 @@ function myLoadFunction() {
 
 function startGame() {
 	selectStartBar.style.display = "none";
+	var bombs = document.getElementsByClassName('bomb');
 	// tank starting to fire
 	for (var i = 0; i < selectTanks.length; i++) {
 		selectTanks[i].style.display = "display";
 		randomTanksSpawn(selectTanks[i]);
 		addBomb(selectTanks[i]);
 	}
-
+	
+	for (var i = 0; i < bombs.length; i++) {
+			  moveBomb(bombs[i]);
+	}
 }
 
 document.addEventListener('DOMContentLoaded', myLoadFunction);
