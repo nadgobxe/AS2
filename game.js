@@ -154,23 +154,12 @@ function moveBomb() { //move bomb
 
 				console.log("My number of lifes is" + lifeCount); // check my logic
 				
-				if (lifeCount >= 3) {
- 
-					healthDiv.removeChild(lifeBalls[2]); // Remove a life ball from the DOM
-					lifeCount--;
-				}
-
-				else if (lifeCount >= 2 && lifeCount < 3) {
- 
-					healthDiv.removeChild(lifeBalls[1]); // Remove a life ball from the DOM
-					lifeCount--;
-				}
-
-				else if (lifeCount >= 1 && lifeCount < 2) {
+				if (lifeCount >= 1) {
  
 					healthDiv.removeChild(lifeBalls[0]); // Remove a life ball from the DOM
 					lifeCount--;
 				}
+
 
 
 
