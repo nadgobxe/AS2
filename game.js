@@ -75,7 +75,23 @@ function keydown(event) {
 	}
 }
 function playerCollisionWithBomb() {
-	
+
+}
+
+function bombControl(elBomb) {
+	var explosion = document.createElement('div');
+	explosion.classList.add('explosion');
+	var body = document.body;
+	body.appendChild(explosion);
+	explosion.style.top = elBomb.offsetTop + "px";
+	explosion.style.left = elBomb.offsetLeft + "px";
+	explosion.style.position = "absolute";
+	elBomb.classList.remove('bomb');
+	function explosionOff() {
+		explosion.classList.remove('explosion')
+	}
+	setTimeout(explosionOff, 1000) // bomb control - 3rd part sets explosion off after 1 sec
+	console.log("Stop Bomb at the edge of the left screen")
 }
 
 function moveBomb(elBomb) { //bomb control - first part is moves the bomb as long as bomb.offsetLeft is bigger or equal with 0
@@ -85,19 +101,7 @@ function moveBomb(elBomb) { //bomb control - first part is moves the bomb as lon
 		elBomb.style.left = bombLeft - 1 + "px";
 	} else { //bomb control - 2nd part activates the explosion as soon as bomb.offsetLeft is less than 0 px
 
-		var explosion = document.createElement('div');
-		explosion.classList.add('explosion');
-		var body = document.body;
-		body.appendChild(explosion);
-		explosion.style.top = elBomb.offsetTop + "px";
-		explosion.style.left = elBomb.offsetLeft + "px";
-		explosion.style.position = "absolute";
-		elBomb.classList.remove('bomb');
-		function explosionOff() {
-			explosion.classList.remove('explosion')
-		}
-		setTimeout(explosionOff, 1000) // bomb control - 3rd part sets explosion off after 1 sec
-		console.log("Stop Bomb at the edge of the left screen")
+		bombControl(elBomb); //call bombControl() function
 	}
 }
 
