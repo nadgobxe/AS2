@@ -39,7 +39,7 @@ aside ul {list-style-type: none; margin-left: 0; padding-left: 0; margin-bottom:
 #opponent .head {background-image: url(images/head1.png);}
 
 .tank {background-image: url(images/tank.png);position: absolute; height: 68px; width: 151px; background-size: contain; background-repeat: no-repeat;}
-.tank.one {left: 80%;}
+.tank.one {top: 30vh; left: 80%;}
 .tank.two {top: 50vh; left: 80%;}
 .tank.three {top: 70vh; left: 80%;}
 
@@ -454,6 +454,40 @@ aside ul {list-style-type: none; margin-left: 0; padding-left: 0; margin-bottom:
 	position: absolute;
 	margin-top: 0.4em;
 	margin-left: 0.4em;
+}
+
+.gameover:before {
+	background-image: url(images/head1.png);
+	background-repeat: no-repeat;
+	background-position: 0px -530px;
+	width: 32px;
+	height: 32px;
+	content: " ";
+	display: block;
+	position: absolute;
+	margin-top: 0.4em;
+	margin-left: 0.4em;
+}
+.gameover {
+
+	color: white;
+	text-shadow: 2px 2px 2px #000;
+	position: absolute;
+	font-size: 2em;
+	margin-left: auto;
+	margin-right: auto;
+	width: 20vw;
+	background-color: #ccc;
+	z-index: 1000;
+	text-align: center;
+	left: 50%;
+	margin-left: -10vw;
+	top: 50%;
+	margin-top: -1em;
+	font-family: 'Anton';
+	cursor: pointer;
+	border-radius: 20px;
+	box-shadow: 4px 4px 4px #000;
 }
 
 .start {

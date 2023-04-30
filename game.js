@@ -92,34 +92,108 @@ function move() {
 }
 
 
-function addBomb(tank) {
+function addBomb(tank) { //add bomb
 
-		var bomb = document.createElement('div');
-		bomb.classList.add('bomb');
-		var body = document.body;
-		body.appendChild(bomb);
-		bomb.style.top = tank.offsetTop + 10 + 'px';
-		bomb.style.left = tank.offsetLeft + 'px';
-		bomb.style.position = 'absolute';
-		console.log(tank.offsetTop);
-		console.log(tank.offsetLeft);
-		setInterval(moveBomb, 10);
+	var bomb = document.createElement('div');
+	bomb.classList.add('bomb');
+	var body = document.body;
+	body.appendChild(bomb);
+	bomb.style.top = tank.offsetTop + 10 + 'px';
+	bomb.style.left = tank.offsetLeft + 'px';
+	bomb.style.position = "absolute";
+	console.log(tank.offsetTop);
+	console.log(tank.offsetLeft);
+	setInterval(moveBomb, 10);
 }
 
 
-function moveBomb() {
-	var bombs = document.getElementsByClassName('bomb');
 
-	for (var i = 0; i < tankArray.length; i++) { 
-		var viewportW = window.innerWidth;
+
+function moveBomb() { //move bomb
+	var bombs = document.getElementsByClassName('bomb');
+	
+
+	for (var i = 0; i < bombs.length; i++) {  // loop through all bombs
 		var left = bombs[i].offsetLeft;
-		if(left > 0) {
+		var top = bombs[i].offsetTop
+
+		function bombExplode() { // reusable function
+			var explosion = document.createElement('div'); // add explosion class when bomb offsetLeft reaches 1
+			explosion.classList.add('explosion');
+
+
+			explosion.style.top = bombs[i].offsetTop + "px"; // add explosion based on the last bomb position
+			explosion.style.left = bombs[i].offsetLeft + "px";
+			document.body.appendChild(explosion);
+
+
+			function removeExplosion() {
+				var newExplosions = document.getElementsByClassName('explosion'); // remove explosion after 5 seconds
+				for (var j = 0; j < newExplosions.length; j++) {
+					newExplosions[j].classList.remove('explosion');
+				}
+			}
+			setTimeout(removeExplosion, 5000);
+
+			bombs[i].remove();
+		}
+		/// Start Life Counting ///
+
+		var healthDiv = document.getElementsByClassName('health')[0];
+		var lifeBalls = healthDiv.getElementsByTagName('li');
+		var lifeCount = lifeBalls.length;
+
+		if (left >= 1) {
 			console.log(left);
-			bombs[i].style.left = left - 1 + 'px'; 
+			bombs[i].style.left = left - 1 + 'px';  // bomb going from tank towards the left edge
+			var elementBomb = document.elementFromPoint(left, top);
+			if (elementBomb.classList.contains('head') || elementBomb.classList.contains('body')) {
+
+				console.log("ZZzzZZZZZZZzzzZZZZZZZZ"); // testing collision
+
+
+				console.log("My number of lifes is" + lifeCount); // check my logic
+				
+				if (lifeCount >= 3) {
+ 
+					healthDiv.removeChild(lifeBalls[2]); // Remove a life ball from the DOM
+					lifeCount--;
+				}
+
+				else if (lifeCount >= 2 && lifeCount < 3) {
+ 
+					healthDiv.removeChild(lifeBalls[1]); // Remove a life ball from the DOM
+					lifeCount--;
+				}
+
+				else if (lifeCount >= 1 && lifeCount < 2) {
+ 
+					healthDiv.removeChild(lifeBalls[0]); // Remove a life ball from the DOM
+					lifeCount--;
+				}
+
+
+
+				///////////////
+				else if (lifeCount == 0) {
+					player.className = 'character dead'; // set css style for dead
+
+					var gameOver = document.getElementsByClassName('start')[0]; // game over bar with dead character
+					gameOver.style.display = "block";
+					gameOver.classList.remove('start');
+					gameOver.classList.add('gameover');
+					gameOver.innerHTML = "Game Over";
+
+					bombExplode(); // call bombExplosion
+
+					gameOver.addEventListener('click', refreshGame); // call reste game function
+				}
+			}
 		}
 		else {
-	
-		 }
+
+			bombExplode(); // call bombExplosion
+		}
 	}
 }
 
@@ -133,10 +207,30 @@ function myLoadFunction() {
 function startGame() {
 	var selectStartButton = document.getElementsByClassName('start');  /* Selects HTML elements with the class 'start' */
 	selectStartButton[0].style.display = 'none'; /*Removes the start bar */
-	for (var i = 0; i < tankArray.length; i++) {
+	for (var i = 0; i < tankArray.length; i++) { // add bomb to each tank start position
 		var tankElement = tankArray[i];
 		addBomb(tankElement);
 	};
+}
+
+function refreshGame() { //reset game
+	var gameOver = document.getElementsByClassName('gameover')[0]; //switch hud bar from gameover to start game
+	gameOver.classList.remove('gameover');
+	gameOver.classList.add('start');
+	gameOver.style.display = "block";
+
+	var player = document.getElementById('player'); // restore player position and class
+	player.className = 'character stand';
+	player.style.top = "80vh";
+	player.style.left = "200px";
+
+	for (var i = 0; i < 3; i++) { //restore no of lifes
+		var healthDiv = document.getElementsByClassName('health')[0];
+		var li = document.createElement("li");
+		healthDiv.appendChild(li);
+	}
+
+	startGame();
 }
 
 document.addEventListener('click', startGame);
