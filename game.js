@@ -196,14 +196,17 @@ function myLoadFunction() {
 function startGame() {
 	var selectStartButton = document.getElementsByClassName('start');  /* Selects HTML elements with the class 'start' */
 	selectStartButton[0].style.display = 'none'; /*Removes the start bar */	
+
 	function repeatBomb() {
 		for (var i = 0; i < tankArray.length; i++) { // add bomb to each tank start position
 			var tankElement = tankArray[i];
 			addBomb(tankElement);
 		}
-		setInterval(repeatBomb, 1000);
-	};
+	}
+	
+	setInterval(repeatBomb, 2500); // Call repeatBomb() every 5 seconds
 }
+
 
 function refreshGame() { //reset game
 	var gameOver = document.getElementsByClassName('gameover')[0]; //switch hud bar from gameover to start game
