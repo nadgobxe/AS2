@@ -75,24 +75,19 @@ function keydown(event) {
 	}
 }
 
-function bombExplosion(elBomb) {
+function bombExplosion() {
+	var selectBombs = document.getElementsByClassName('bomb')[0];
+	var left = selectBombs.offsetLeftl
+	windowWidth = window.innerWidth;
+	var tankLocation = document.getElementsByClassName('tank')[0];
 
-	var bombLeft = elBomb.offsetLeft;
-	console.log("bomb offset :" + bombLeft);
-	console.log("elBomb :" + elBomb.offsetLeft);
 
-	if (bombLeft >= 1) {
-		moveBomb(elBomb);
-	} else {
-		elBomb.style.left = 0 + "px";
-		var explosion = document.createElement('div');
-		explosion.classList.add('explosion');
-		elBomb.appendChild(explosion);
-		elBomb.classList.remove('bomb');
+	if (left <= 0) {
+		console.log("STOPPPPP");
+		console.log("left is" + left);
+		console.log
 	}
 }
-
-// bomb settings
 
 function moveBomb(elBomb) {
 	var bombLeft = elBomb.offsetLeft;
@@ -100,11 +95,15 @@ function moveBomb(elBomb) {
 }
 
 function addBomb(tank) {
-	var tankPosition = tank.offsetTop;
 	var bomb = document.createElement('div');
+	left = tank.offsetLeft;
+	top = tank.offsetTop + 151;
 	bomb.className = "bomb";
-	bomb.style.top = tank.style.width + 10 + "px";
-	tank.appendChild(bomb);
+	bomb.style.top = top + 10 + "px";
+	bomb.style.left = left + "px";
+	bomb.style.position = "absolute";
+	var body = document.body;
+	body.appendChild(bomb);
 }
 
 // end bomb settings
@@ -130,11 +129,11 @@ function myLoadFunction() {
 
 //triggers
 
-function triggerMoveBomb(functionParam) { //reussable function used form bombExplosion and bombMove
+function triggerMoveBomb(functionParam) { //reussable function used for bombMove
 	var bombs = document.getElementsByClassName('bomb');
 	for (var i = 0; i < bombs.length; i++) {
 		functionParam(bombs[i]);
-		console.log(bombs);
+		console.log(bombs[0]);
 	}
 }
 
@@ -152,10 +151,11 @@ function startGame() {
 	selectStartBar.style.display = "none";
 
 	triggerTankSpawn(); // tank spawn
-	triggerMoveBomb(bombExplosion);
+	
 	setInterval(function () {
 		triggerMoveBomb(moveBomb);
 	}, 10); // ignite bomb movement	
+	bombExplosion();
 }
 
 document.addEventListener('DOMContentLoaded', myLoadFunction);
