@@ -78,9 +78,13 @@ function keydown(event) {
 function bombExplosion(elBomb) {
 
 	var bombLeft = elBomb.offsetLeft;
-	
-	if (bombLeft > 1) {
-		elBomb.style.left = bombLeft + "px";
+	console.log("bomb offset :" + bombLeft);
+	console.log("elBomb :" + elBomb.offsetLeft);
+
+	if (bombLeft >= 1) {
+		moveBomb(elBomb);
+	} else {
+		elBomb.style.left = 0 + "px";
 		var explosion = document.createElement('div');
 		explosion.classList.add('explosion');
 		elBomb.appendChild(explosion);
@@ -126,17 +130,11 @@ function myLoadFunction() {
 
 //triggers
 
-function triggerMoveBomb() {
+function triggerMoveBomb(functionParam) { //reussable function used form bombExplosion and bombMove
 	var bombs = document.getElementsByClassName('bomb');
 	for (var i = 0; i < bombs.length; i++) {
-		moveBomb(bombs[i]);
-	}
-}
-
-function triggerExplosion() {
-	var bombs = document.getElementsByClassName('bomb');
-	for (var i = 0; i < bombs.length; i++) {
-		bombExplosion(bombs[i]);
+		functionParam(bombs[i]);
+		console.log(bombs);
 	}
 }
 
@@ -154,8 +152,10 @@ function startGame() {
 	selectStartBar.style.display = "none";
 
 	triggerTankSpawn(); // tank spawn
-	triggerExplosion();
-	setInterval(triggerMoveBomb, 10) // ignite bomb movement	
+	triggerMoveBomb(bombExplosion);
+	setInterval(function () {
+		triggerMoveBomb(moveBomb);
+	}, 10); // ignite bomb movement	
 }
 
 document.addEventListener('DOMContentLoaded', myLoadFunction);
