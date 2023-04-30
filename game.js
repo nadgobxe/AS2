@@ -85,7 +85,7 @@ function bombControl(elBomb) {
 	body.appendChild(explosion);
 	explosion.style.top = elBomb.offsetTop + "px";
 	explosion.style.left = elBomb.offsetLeft + "px";
-	explosion.style.position = "absolute";
+	// explosion.style.position = "absolute";
 	elBomb.classList.remove('bomb');
 	function explosionOff() {
 		explosion.classList.remove('explosion')
@@ -95,10 +95,29 @@ function bombControl(elBomb) {
 }
 
 function moveBomb(elBomb) { //bomb control - first part is moves the bomb as long as bomb.offsetLeft is bigger or equal with 0
+
 	var bombLeft = elBomb.offsetLeft;
+	var bombTop = elBomb.offsetTop;
 
 	if (bombLeft >= 0) {
+
 		elBomb.style.left = bombLeft - 1 + "px";
+		var elBomb = document.elementFromPoint(bombLeft, bombTop);
+
+		if (elBomb.classList.contains('head') || elBomb.classList.contains('body')) {
+			//call playerCollisionWithBomb()
+			console.log("Hey - I'm dead");
+			
+			bombControl(elBomb); // triggers bomb explosion
+
+			var deadPlayer = document.getElementById('player');
+			deadPlayer.classList.add("dead");
+
+			var removeClassListArray = ["stand", "walk", "up", "down", "left", "right"];
+			for (var i = 0; i < removeClassListArray.length; i++) {
+				deadPlayer.classList.remove(removeClassListArray[i]);
+			}
+		}
 	} else { //bomb control - 2nd part activates the explosion as soon as bomb.offsetLeft is less than 0 px
 
 		bombControl(elBomb); //call bombControl() function
