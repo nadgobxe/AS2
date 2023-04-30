@@ -103,7 +103,7 @@ function addBomb(tank) { //add bomb
 	bomb.style.position = "absolute";
 	console.log(tank.offsetTop);
 	console.log(tank.offsetLeft);
-	setInterval(moveBomb, 10);
+	timeout = setInterval(moveBomb, 10);
 }
 
 
@@ -111,7 +111,7 @@ function addBomb(tank) { //add bomb
 
 function moveBomb() { //move bomb
 	var bombs = document.getElementsByClassName('bomb');
-	
+
 
 	for (var i = 0; i < bombs.length; i++) {  // loop through all bombs
 		var left = bombs[i].offsetLeft;
@@ -133,7 +133,7 @@ function moveBomb() { //move bomb
 					newExplosions[j].classList.remove('explosion');
 				}
 			}
-			setTimeout(removeExplosion, 5000);
+			setTimeout(removeExplosion, 1000);
 
 			bombs[i].remove();
 		}
@@ -153,9 +153,9 @@ function moveBomb() { //move bomb
 
 
 				console.log("My number of lifes is" + lifeCount); // check my logic
-				
+
 				if (lifeCount >= 1) {
- 
+
 					healthDiv.removeChild(lifeBalls[0]); // Remove a life ball from the DOM
 					lifeCount--;
 				}
@@ -195,10 +195,13 @@ function myLoadFunction() {
 
 function startGame() {
 	var selectStartButton = document.getElementsByClassName('start');  /* Selects HTML elements with the class 'start' */
-	selectStartButton[0].style.display = 'none'; /*Removes the start bar */
-	for (var i = 0; i < tankArray.length; i++) { // add bomb to each tank start position
-		var tankElement = tankArray[i];
-		addBomb(tankElement);
+	selectStartButton[0].style.display = 'none'; /*Removes the start bar */	
+	function repeatBomb() {
+		for (var i = 0; i < tankArray.length; i++) { // add bomb to each tank start position
+			var tankElement = tankArray[i];
+			addBomb(tankElement);
+		}
+		setInterval(repeatBomb, 1000);
 	};
 }
 
