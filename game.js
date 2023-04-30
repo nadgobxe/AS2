@@ -75,6 +75,20 @@ function keydown(event) {
 	}
 }
 
+function bombExplosion(elBomb) {
+
+	var bombLeft = elBomb.offsetLeft;
+	
+	if (bombLeft > 1) {
+		elBomb.style.left = bombLeft + "px";
+		var explosion = document.createElement('div');
+		explosion.classList.add('explosion');
+		elBomb.appendChild(explosion);
+		elBomb.classList.remove('bomb');
+	}
+}
+
+// bomb settings
 
 function moveBomb(elBomb) {
 	var bombLeft = elBomb.offsetLeft;
@@ -89,6 +103,7 @@ function addBomb(tank) {
 	tank.appendChild(bomb);
 }
 
+// end bomb settings
 
 function randomTanksSpawn(tank) {
 	var randomize = Math.floor(Math.random() * window.innerHeight); // generate random number
@@ -109,19 +124,38 @@ function myLoadFunction() {
 	selectStartBar.addEventListener('click', startGame);
 }
 
-function startGame() {
-	selectStartBar.style.display = "none";
+//triggers
+
+function triggerMoveBomb() {
 	var bombs = document.getElementsByClassName('bomb');
-	// tank starting to fire
+	for (var i = 0; i < bombs.length; i++) {
+		moveBomb(bombs[i]);
+	}
+}
+
+function triggerExplosion() {
+	var bombs = document.getElementsByClassName('bomb');
+	for (var i = 0; i < bombs.length; i++) {
+		bombExplosion(bombs[i]);
+	}
+}
+
+function triggerTankSpawn() {
 	for (var i = 0; i < selectTanks.length; i++) {
 		selectTanks[i].style.display = "display";
 		randomTanksSpawn(selectTanks[i]);
 		addBomb(selectTanks[i]);
 	}
-	
-	for (var i = 0; i < bombs.length; i++) {
-			  moveBomb(bombs[i]);
-	}
+}
+
+//end triggers
+
+function startGame() {
+	selectStartBar.style.display = "none";
+
+	triggerTankSpawn(); // tank spawn
+	triggerExplosion();
+	setInterval(triggerMoveBomb, 10) // ignite bomb movement	
 }
 
 document.addEventListener('DOMContentLoaded', myLoadFunction);
