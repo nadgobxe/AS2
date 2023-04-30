@@ -115,7 +115,7 @@ function moveBomb() { //move bomb
 
 	for (var i = 0; i < bombs.length; i++) {  // loop through all bombs
 		var left = bombs[i].offsetLeft;
-		var top = bombs[i].offsetTop
+		var top = bombs[i].offsetTop;
 
 		function bombExplode() { // reusable function
 			var explosion = document.createElement('div'); // add explosion class when bomb offsetLeft reaches 1
@@ -133,7 +133,7 @@ function moveBomb() { //move bomb
 					newExplosions[j].classList.remove('explosion');
 				}
 			}
-			setTimeout(removeExplosion, 1000);
+			setTimeout(removeExplosion, 1000); //explosion active for 1 second and then removals class ('explosion')
 
 			bombs[i].remove();
 		}
@@ -195,38 +195,50 @@ function myLoadFunction() {
 
 function startGame() {
 	var selectStartButton = document.getElementsByClassName('start');  /* Selects HTML elements with the class 'start' */
-	selectStartButton[0].style.display = 'none'; /*Removes the start bar */	
+	selectStartButton[0].style.display = 'none'; /*Removes the start bar */
 
+	var bombs = document.getElementsByClassName('bomb'); // select bombs element from DOM 
 	function repeatBomb() {
 		for (var i = 0; i < tankArray.length; i++) { // add bomb to each tank start position
 			var tankElement = tankArray[i];
 			addBomb(tankElement);
 		}
 	}
-	
-	setInterval(repeatBomb, 2500); // Call repeatBomb() every 5 seconds
-}
 
+	var repeatBombInterval = setInterval(repeatBomb, 2500); // add bombs each 2.5 secs
 
-function refreshGame() { //reset game
-	var gameOver = document.getElementsByClassName('gameover')[0]; //switch hud bar from gameover to start game
-	gameOver.classList.remove('gameover');
-	gameOver.classList.add('start');
-	gameOver.style.display = "block";
-
-	var player = document.getElementById('player'); // restore player position and class
-	player.className = 'character stand';
-	player.style.top = "80vh";
-	player.style.left = "200px";
-
-	for (var i = 0; i < 3; i++) { //restore no of lifes
-		var healthDiv = document.getElementsByClassName('health')[0];
-		var li = document.createElement("li");
-		healthDiv.appendChild(li);
+	function removeBombInterval() {  // function to stop bombs when gameover (bomb collides with player)
+		for (var i = 0; i < bombs.length; i++) {  // loop through all bombs
+			var left = bombs[i].offsetLeft;
+			var top = bombs[i].offsetTop;
+			var elementBomb = document.elementFromPoint(left, top);
+			if (elementBomb.classList.contains('head') || elementBomb.classList.contains('body')) {
+				clearInterval(repeatBombInterval); // stop bombs when gameover (bomb collides with player)
+			}
+		}
 	}
 
-	startGame();
+	setInterval(removeBombInterval, 10); // check for collisions every 10ms
 }
+	function refreshGame() { //reset game
+		var gameOver = document.getElementsByClassName('gameover')[0]; //switch hud bar from gameover to start game
+		gameOver.classList.remove('gameover');
+		gameOver.classList.add('start');
+		gameOver.style.display = "block";
 
-document.addEventListener('click', startGame);
-document.addEventListener('DOMContentLoaded', myLoadFunction);
+		var player = document.getElementById('player'); // restore player position and class
+		player.className = 'character stand';
+		player.style.top = "80vh";
+		player.style.left = "200px";
+
+		for (var i = 0; i < 3; i++) { //restore no of lifes
+			var healthDiv = document.getElementsByClassName('health')[0];
+			var li = document.createElement("li");
+			healthDiv.appendChild(li);
+		}
+
+		startGame();
+	}
+
+	document.addEventListener('click', startGame);
+	document.addEventListener('DOMContentLoaded', myLoadFunction);
