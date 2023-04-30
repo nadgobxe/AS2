@@ -74,20 +74,31 @@ function keydown(event) {
 		downPressed = true;
 	}
 }
+function playerCollisionWithBomb() {
+	
+}
 
-function moveBomb(elBomb) {
+function moveBomb(elBomb) { //bomb control - first part is moves the bomb as long as bomb.offsetLeft is bigger or equal with 0
 	var bombLeft = elBomb.offsetLeft;
 
 	if (bombLeft >= 0) {
 		elBomb.style.left = bombLeft - 1 + "px";
-	}	else {
+	} else { //bomb control - 2nd part activates the explosion as soon as bomb.offsetLeft is less than 0 px
+
 		var explosion = document.createElement('div');
 		explosion.classList.add('explosion');
-		elBomb.appendChild(explosion);
+		var body = document.body;
+		body.appendChild(explosion);
+		explosion.style.top = elBomb.offsetTop + "px";
+		explosion.style.left = elBomb.offsetLeft + "px";
+		explosion.style.position = "absolute";
 		elBomb.classList.remove('bomb');
-		
-		console.log("Stoppppppppppp")}
-			
+		function explosionOff() {
+			explosion.classList.remove('explosion')
+		}
+		setTimeout(explosionOff, 1000) // bomb control - 3rd part sets explosion off after 1 sec
+		console.log("Stop Bomb at the edge of the left screen")
+	}
 }
 
 function addBomb(tank) {
@@ -149,7 +160,6 @@ function startGame() {
 	setInterval(function () {
 		triggerMoveBomb(moveBomb);
 	}, 10); // ignite bomb movement	
-	bombExplosion();
 }
 
 document.addEventListener('DOMContentLoaded', myLoadFunction);
