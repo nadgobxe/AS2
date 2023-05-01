@@ -274,7 +274,7 @@ function triggerTankSpawn() {
 	for (var i = 0; i < selectTanks.length; i++) {
 		selectTanks[i].style.display = "display";
 		randomTanksSpawn(selectTanks[i]);
-		addBomb(selectTanks[i]);
+		setInterval(addBomb(selectTanks[i]), 5000); // add bombs each 5 seconds
 	}
 }
 
