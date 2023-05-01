@@ -79,23 +79,35 @@ function playerCollisionWithBomb() {
 }
 
 function bombControl() {
+	
 	var bombs = document.getElementsByClassName('bomb');
 
 	for (var i = 0; i < bombs.length; i++) {
-		var explosion = document.createElement('div');
-		explosion.classList.add('explosion');
-		var top = bombs[i].offsetTop;
 		var left = bombs[i].offsetLeft;
-		explosion.style.top = top + "px";
-		explosion.style.left = left + "px";
-		document.body.appendChild(explosion);
-		explosion.style.position = "absolute";
-		bombs[i].classList.remove('bomb');
+		var top = bombs[i].offsetTop;
 
-		function explosionOff() {
-			explosion.classList.remove('explosion')
+		if (left <= 1) { // check if bomb has reached left edge
+			bombExplode(bombs[i]); // trigger explosion
 		}
-		setTimeout(explosionOff, 1000); // explosion lasts for 1 second
+	}
+
+	function bombExplode(bomb) { // reusable function
+		var explosion = document.createElement('div'); // add explosion class when bomb offsetLeft reaches 1
+		explosion.classList.add('explosion');
+
+		explosion.style.top = bomb.offsetTop + "px"; // add explosion based on the last bomb position
+		explosion.style.left = bomb.offsetLeft + "px";
+		document.body.appendChild(explosion);
+
+		function removeExplosion() {
+			var newExplosions = document.getElementsByClassName('explosion'); // remove explosion after 5 seconds
+			for (var j = 0; j < newExplosions.length; j++) {
+				newExplosions[j].classList.remove('explosion');
+			}
+		}
+		setTimeout(removeExplosion, 1000); // explosion active for 1 second and then removals class ('explosion')
+
+		bomb.remove();
 	}
 }
 //==============================================================================================================================================
