@@ -78,21 +78,25 @@ function playerCollisionWithBomb() {
 
 }
 
-function bombControl(elBomb) {
-	var explosion = document.createElement('div');
-	explosion.classList.add('explosion');
-	var top = elBomb.offsetTop 
-	explosion.style.top = top + "px";
-	explosion.style.left = elBomb.offsetLeft + "px";
-	document.body.appendChild(explosion);
-	explosion.style.position = "absolute";
-	elBomb.classList.remove('bomb');
-	function explosionOff() {
-		explosion.classList.remove('explosion')
+function bombControl() {
+	var bombs = document.getElementsByClassName('bomb');
+
+	for (var i = 0; i < bombs.length; i++) {
+		var explosion = document.createElement('div');
+		explosion.classList.add('explosion');
+		var top = bombs[i].offsetTop;
+		var left = bombs[i].offsetLeft;
+		explosion.style.top = top + "px";
+		explosion.style.left = left + "px";
+		document.body.appendChild(explosion);
+		explosion.style.position = "absolute";
+		bombs[i].classList.remove('bomb');
+
+		function explosionOff() {
+			explosion.classList.remove('explosion')
+		}
+		setTimeout(explosionOff, 1000); // explosion lasts for 1 second
 	}
-	console.log("TOP is:" + top);
-	setTimeout(explosionOff, 1000) // bomb control - 3rd part sets explosion off after 1 sec
-	console.log("Stop Bomb at the edge of the left screen")
 }
 //==============================================================================================================================================
 function moveBomb(elBomb) { //bomb control - first part is moves the bomb as long as bomb.offsetLeft is bigger or equal with 0
@@ -111,9 +115,9 @@ function moveBomb(elBomb) { //bomb control - first part is moves the bomb as lon
 
 			var bombs = document.getElementsByClassName('bomb');
 			
-			for ( var i = 0; i < bombs.length; i++) {
-			bombControl(bombs[i]); // triggers bomb explosion
-		}
+			
+			bombControl(); // triggers bomb explosion
+
 			var deadPlayer = document.getElementById('player');
 			deadPlayer.classList.add("dead");
 
@@ -124,7 +128,7 @@ function moveBomb(elBomb) { //bomb control - first part is moves the bomb as lon
 		}
 	} else { //bomb control - 2nd part activates the explosion as soon as bomb.offsetLeft is less than 0 px
 		
-		bombControl(elBomb); //call bombControl() function
+		bombControl(); //call bombControl() function
 	}
 }
 
