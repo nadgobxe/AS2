@@ -74,11 +74,20 @@ function keydown(event) {
 		downPressed = true;
 	}
 }
-function playerCollisionWithBomb() {
 
+
+
+
+function playerDead() {
+	var deadPlayer = document.getElementById("player");
+	deadPlayer.classList.add("dead");
+	var removeClassListArray = ["stand", "walk", "up", "down", "left", "right"];
+	for (var i = 0; i < removeClassListArray.length; i++) {
+	  deadPlayer.classList.remove(removeClassListArray[i]);
+	}
 }
 
-function bombControl(elBomb) {
+function bombControl(elBomb) { //bomb explosion
 	var explosion = document.createElement('div');
 	explosion.classList.add('explosion');
 
@@ -100,22 +109,20 @@ function bombControl(elBomb) {
 	console.log("Stop Bomb at the edge of the left screen")
 }
 //==============================================================================================================================================
-function moveBomb(elBomb) {
+function moveBomb(elBomb) { //bomb movement + bomb explosion end of screen and bomb explosion(call function bombControl) when meets players
 	var bombLeft = elBomb.offsetLeft;
 	var bombTop = elBomb.offsetTop;
+	var bombRight = elBomb.offsetLeft + 31;
+	var bombBottom = elBomb.offsetTop + 10;
   
 	if (bombLeft >= 0) {
 	  elBomb.style.left = bombLeft - 1 + "px";
-	  var elBombAtPos = document.elementFromPoint(bombLeft, bombTop);
+	  var elBombAtPos = document.elementFromPoint(bombLeft, bombTop); //check position from top/left points
+	  var elBombAtPosInverse = document.elementFromPoint(bombRight, bombBottom); //check position from inverse points
   
-	  if (elBombAtPos.classList.contains("head") || elBombAtPos.classList.contains("body")) {
+	  if (elBombAtPos.classList.contains("head") || elBombAtPos.classList.contains("body") || elBombAtPosInverse.classList.contains("head") || elBombAtPosInverse.classList.contains("body")) { //check collision from multiple points
 		console.log("Hey - I'm dead");
-		var deadPlayer = document.getElementById("player");
-		deadPlayer.classList.add("dead");
-		var removeClassListArray = ["stand", "walk", "up", "down", "left", "right"];
-		for (var i = 0; i < removeClassListArray.length; i++) {
-		  deadPlayer.classList.remove(removeClassListArray[i]);
-		}
+		playerDead() // call playerDead function
 		bombControl(elBomb); // call bombControl
 	  }
 	} else {
@@ -124,8 +131,9 @@ function moveBomb(elBomb) {
   }
 
 //===============================================================================================================
+// end bomb settings
 
-function addBomb(tank) {
+function addBomb(tank) { // add tank div on canvas
 	var bomb = document.createElement('div');
 	bomb.classList.add('bomb');
 	var body = document.body;
@@ -135,9 +143,9 @@ function addBomb(tank) {
 	bomb.style.position = "absolute";
 }
 
-// end bomb settings
 
-function randomTanksSpawn(tank) {
+
+function randomTanksSpawn(tank) { // randomize tank css position
 	var randomize = Math.floor(Math.random() * window.innerHeight); // generate random number
 	tank.style.display = "block";
 	tank.style.top = randomize + "px";
