@@ -5,6 +5,7 @@ var rightPressed = false;
 
 var lastPressed = false;
 var timeout = 0;
+var timeoutBomb = 0;
 
 var selectStartBar = document.getElementsByClassName('start')[0]; //select Start Bar
 var selectTanks = document.getElementsByClassName('tank'); // select tanks
@@ -104,6 +105,46 @@ function playerDead() {
 	for (var i = 0; i < removeClassListArray.length; i++) {
 		deadPlayer.classList.remove(removeClassListArray[i]);
 	}
+	var gameOver = document.getElementsByClassName('start')[0]; // game over bar with dead character
+	gameOver.style.display = "block";
+	gameOver.classList.remove('start');
+	gameOver.classList.add('gameover');
+	gameOver.innerHTML = "Game Over";
+	clearInterval(timeout); // stop checking for movement
+
+	var bombs = document.getElementsByClassName('bomb');
+	for (var i = 0; i < bombs.length; i++) {
+		var bomb = bombs[i].offsetLeft;
+		console.log("value of bomb is: " + bomb)
+
+		if (bomb == 50) {
+			clearInterval(timeoutBomb); // stop adding more bombs and increasing the speed of the game
+			console.log("Code kicked in?");
+		}
+	}
+	gameOver.addEventListener('click', refreshGame); // call reste game function
+}
+
+function refreshGame() { //reset game
+	var gameOver = document.getElementsByClassName('gameover')[0]; //switch hud bar from gameover to start game
+	gameOver.classList.remove('gameover');
+	gameOver.classList.add('start');
+	gameOver.style.display = "block";
+
+	var player = document.getElementById('player'); // restore player position and class
+	player.className = 'character stand';
+	player.style.top = "80vh";
+	player.style.left = "200px";
+
+	timeout = setInterval(move, 10); //start checking for movement
+
+	// for (var i = 0; i < 3; i++) { //restore no of lifes
+	// 	var healthDiv = document.getElementsByClassName('health')[0];
+	// 	var li = document.createElement("li");
+	// 	healthDiv.appendChild(li);
+	// }
+
+	startGame();
 }
 
 function bombControl(elBomb) { //bomb explosion
@@ -119,6 +160,7 @@ function bombControl(elBomb) { //bomb explosion
 	explosion.style.position = "absolute";
 
 	elBomb.classList.remove('bomb');
+	elBomb.remove();
 
 	function explosionOff() {
 		explosion.classList.remove('explosion')
@@ -208,7 +250,7 @@ function startGame() {
 
 	triggerTankSpawn(); // tank spawn
 
-	setInterval(function () {
+	timeoutBomb = setInterval(function () {
 		triggerMoveBomb(moveBomb);
 	}, 10); // ignite bomb movement	
 }
