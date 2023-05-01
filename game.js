@@ -105,6 +105,7 @@ function removeLife() {
 	  else {
 		// gameover
 		playerDead(); // call playerDead function
+		clearInterval(repeatBombInterval); // stop bombs when gameover (bomb collides with player)
 	  }
 
 }
@@ -148,6 +149,13 @@ function refreshGame() { //reset game
 	player.className = 'character stand';
 	player.style.top = "80vh";
 	player.style.left = "200px";
+
+	var health = document.getElementsByClassName('health')[0];
+	
+	for (var i = 0; i < 3; i++) {
+		var li = document.createElement("li");
+		health.appendChild(li);
+	}
 
 	timeout = setInterval(move, 10); //start checking for movement
 
@@ -235,8 +243,6 @@ function addBomb(tank) { // add tank div on canvas
 	bomb.style.left = tank.offsetLeft + 'px';
 	bomb.style.position = "absolute";
 
-	randomExplode();
-
 }
 
 
@@ -274,15 +280,17 @@ function triggerTankSpawn() {
 	for (var i = 0; i < selectTanks.length; i++) {
 		selectTanks[i].style.display = "display";
 		randomTanksSpawn(selectTanks[i]);
-		setInterval(addBomb(selectTanks[i]), 5000); // add bombs each 5 seconds
+		addBomb(selectTanks[i])
 	}
 }
+
+var repeatBombInterval = setInterval(triggerTankSpawn, 5000); // clearInterval purpose
 
 //end triggers
 
 function startGame() {
 	selectStartBar.style.display = "none";
-	triggerTankSpawn(); // tank spawn
+	setInterval(triggerTankSpawn, 5000); // tank spawn
 
 	timeoutBomb = setInterval(function () {
 		triggerMoveBomb(moveBomb);
