@@ -95,6 +95,19 @@ function keydown(event) {
 	}
 }
 
+function removeLife() {
+	var healthBar = document.getElementsByClassName('health')[0];
+	var li = healthBar.getElementsByTagName('li');
+	if (li.length > 0) {
+		li[0].remove();
+	  }
+
+	  else {
+		// gameover
+		playerDead(); // call playerDead function
+	  }
+
+}
 
 
 
@@ -146,6 +159,21 @@ function refreshGame() { //reset game
 
 	startGame();
 }
+//start random bomb explode
+var conditionTrigger = 0;
+function randomExplode() {
+
+	var windowWidth = window.innerWidth; //get canvas total width
+
+	var retriveTank = document.getElementsByClassName('tank')[0];
+	var offsetTankLeft = retriveTank.offsetLeft;
+
+	var canvasLength = windowWidth - offsetTankLeft; // value of remaining distance from tank to left end of the canvas
+	conditionTrigger = Math.floor(canvasLength * Math.random()); // modify conditionTrigger value in the global scope
+
+
+}
+randomExplode(); // call function first time
 
 function bombControl(elBomb) { //bomb explosion
 	var explosion = document.createElement('div');
@@ -176,14 +204,15 @@ function moveBomb(elBomb) { //bomb movement + bomb explosion end of screen and b
 	var bombRight = elBomb.offsetLeft + 31;
 	var bombBottom = elBomb.offsetTop + 10;
 
-	if (bombLeft >= 0) {
+	console.log("Exploding Point Value is:" + conditionTrigger);
+	if (bombLeft >= conditionTrigger) {
 		elBomb.style.left = bombLeft - 1 + "px";
 		var elBombAtPos = document.elementFromPoint(bombLeft, bombTop); //check position from top/left points
 		var elBombAtPosInverse = document.elementFromPoint(bombRight, bombBottom); //check position from inverse points
 
 		if (elBombAtPos.classList.contains("head") || elBombAtPos.classList.contains("body") || elBombAtPosInverse.classList.contains("head") || elBombAtPosInverse.classList.contains("body")) { //check collision from multiple points
 			console.log("Hey - I'm dead");
-			playerDead() // call playerDead function
+			removeLife(); // call removeLife
 			bombControl(elBomb); // call bombControl
 		}
 	} else {
@@ -195,6 +224,9 @@ function moveBomb(elBomb) { //bomb movement + bomb explosion end of screen and b
 // end bomb settings
 
 function addBomb(tank) { // add tank div on canvas
+
+	randomExplode(); // call random explosion point again
+
 	var bomb = document.createElement('div');
 	bomb.classList.add('bomb');
 	var body = document.body;
@@ -202,6 +234,9 @@ function addBomb(tank) { // add tank div on canvas
 	bomb.style.top = tank.offsetTop + 10 + 'px';
 	bomb.style.left = tank.offsetLeft + 'px';
 	bomb.style.position = "absolute";
+
+	randomExplode();
+
 }
 
 
@@ -247,7 +282,6 @@ function triggerTankSpawn() {
 
 function startGame() {
 	selectStartBar.style.display = "none";
-
 	triggerTankSpawn(); // tank spawn
 
 	timeoutBomb = setInterval(function () {
