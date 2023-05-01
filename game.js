@@ -78,71 +78,50 @@ function playerCollisionWithBomb() {
 
 }
 
-function bombControl() {
+function bombControl(elBomb) {
+	var explosion = document.createElement('div');
+	explosion.classList.add('explosion');
+
+	var top = elBomb.offsetTop;
+	var left = elBomb.offsetLeft;
+
+	explosion.style.top = top + "px";
+	explosion.style.left = left + "px";
+	document.body.appendChild(explosion);
+	explosion.style.position = "absolute";
+
+	elBomb.classList.remove('bomb');
 	
-	var bombs = document.getElementsByClassName('bomb');
-
-	for (var i = 0; i < bombs.length; i++) {
-		var left = bombs[i].offsetLeft;
-		var top = bombs[i].offsetTop;
-
-		if (left <= 1) { // check if bomb has reached left edge
-			bombExplode(bombs[i]); // trigger explosion
-		}
+	function explosionOff() {
+		explosion.classList.remove('explosion')
 	}
-
-	function bombExplode(bomb) { // reusable function
-		var explosion = document.createElement('div'); // add explosion class when bomb offsetLeft reaches 1
-		explosion.classList.add('explosion');
-
-		explosion.style.top = bomb.offsetTop + "px"; // add explosion based on the last bomb position
-		explosion.style.left = bomb.offsetLeft + "px";
-		document.body.appendChild(explosion);
-
-		function removeExplosion() {
-			var newExplosions = document.getElementsByClassName('explosion'); // remove explosion after 5 seconds
-			for (var j = 0; j < newExplosions.length; j++) {
-				newExplosions[j].classList.remove('explosion');
-			}
-		}
-		setTimeout(removeExplosion, 1000); // explosion active for 1 second and then removals class ('explosion')
-
-		bomb.remove();
-	}
+	console.log("TOP is:" + top);
+	setTimeout(explosionOff, 1000) // bomb control - 3rd part sets explosion off after 1 sec
+	console.log("Stop Bomb at the edge of the left screen")
 }
 //==============================================================================================================================================
-function moveBomb(elBomb) { //bomb control - first part is moves the bomb as long as bomb.offsetLeft is bigger or equal with 0
-
+function moveBomb(elBomb) {
 	var bombLeft = elBomb.offsetLeft;
 	var bombTop = elBomb.offsetTop;
-
+  
 	if (bombLeft >= 0) {
-
-		elBomb.style.left = bombLeft - 1 + "px";
-		var elBomb = document.elementFromPoint(bombLeft, bombTop);
-
-		if (elBomb.classList.contains('head') || elBomb.classList.contains('body')) {
-			//call playerCollisionWithBomb()
-			console.log("Hey - I'm dead");
-
-			var bombs = document.getElementsByClassName('bomb');
-			
-			
-			bombControl(); // triggers bomb explosion
-
-			var deadPlayer = document.getElementById('player');
-			deadPlayer.classList.add("dead");
-
-			var removeClassListArray = ["stand", "walk", "up", "down", "left", "right"];
-			for (var i = 0; i < removeClassListArray.length; i++) {
-				deadPlayer.classList.remove(removeClassListArray[i]);
-			}
+	  elBomb.style.left = bombLeft - 1 + "px";
+	  var elBombAtPos = document.elementFromPoint(bombLeft, bombTop);
+  
+	  if (elBombAtPos.classList.contains("head") || elBombAtPos.classList.contains("body")) {
+		console.log("Hey - I'm dead");
+		var deadPlayer = document.getElementById("player");
+		deadPlayer.classList.add("dead");
+		var removeClassListArray = ["stand", "walk", "up", "down", "left", "right"];
+		for (var i = 0; i < removeClassListArray.length; i++) {
+		  deadPlayer.classList.remove(removeClassListArray[i]);
 		}
-	} else { //bomb control - 2nd part activates the explosion as soon as bomb.offsetLeft is less than 0 px
-		
-		bombControl(); //call bombControl() function
+		bombControl(elBomb); // call bombControl
+	  }
+	} else {
+	  bombControl(elBomb); // when bomb reach end of screen (bomb.offsetLeft == 0) then explode
 	}
-}
+  }
 
 //===============================================================================================================
 
