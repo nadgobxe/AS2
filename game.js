@@ -40,22 +40,41 @@ function move() {
 
 	if (downPressed == true) {
 		var newTop = positionTop + 1;
-		player.style.top = newTop + 'px';
+		var element = document.elementFromPoint(positionLeft, newTop + 46); /* Detect position X/Y axis and return the top element at the specified coordinates. In our case, we would like to find when we collide with the 'cactus' class. To do that, we have to check for element.classList.contains('cactus') */
+
+		console.log("Value of Element is :" + element.className);
+
+		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false) {
+			player.style.top = newTop + 'px';
+		}
 		player.className = 'character walk down';
+
 	}
 	if (upPressed == true) {
 		var newTop = positionTop - 1;
-		player.style.top = newTop + 'px';
+		var element = document.elementFromPoint(positionLeft, newTop);
+
+		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false) {
+			player.style.top = newTop + 'px';
+		}
 		player.className = 'character walk up';
 	}
 	if (leftPressed == true) {
 		var newLeft = positionLeft - 1;
-		player.style.left = newLeft + 'px';
+		var element = document.elementFromPoint(newLeft, positionTop);
+
+		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false) {
+			player.style.left = newLeft + 'px';
+		}
 		player.className = 'character walk left';
 	}
 	if (rightPressed == true) {
 		var newLeft = positionLeft + 1;
-		player.style.left = newLeft + 'px';
+		var element = document.elementFromPoint(newLeft + 32, positionTop);
+
+		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false) {
+			player.style.left = newLeft + 'px';
+		}
 		player.className = 'character walk right';
 	}
 }
@@ -83,7 +102,7 @@ function playerDead() {
 	deadPlayer.classList.add("dead");
 	var removeClassListArray = ["stand", "walk", "up", "down", "left", "right"];
 	for (var i = 0; i < removeClassListArray.length; i++) {
-	  deadPlayer.classList.remove(removeClassListArray[i]);
+		deadPlayer.classList.remove(removeClassListArray[i]);
 	}
 }
 
@@ -100,7 +119,7 @@ function bombControl(elBomb) { //bomb explosion
 	explosion.style.position = "absolute";
 
 	elBomb.classList.remove('bomb');
-	
+
 	function explosionOff() {
 		explosion.classList.remove('explosion')
 	}
@@ -114,21 +133,21 @@ function moveBomb(elBomb) { //bomb movement + bomb explosion end of screen and b
 	var bombTop = elBomb.offsetTop;
 	var bombRight = elBomb.offsetLeft + 31;
 	var bombBottom = elBomb.offsetTop + 10;
-  
+
 	if (bombLeft >= 0) {
-	  elBomb.style.left = bombLeft - 1 + "px";
-	  var elBombAtPos = document.elementFromPoint(bombLeft, bombTop); //check position from top/left points
-	  var elBombAtPosInverse = document.elementFromPoint(bombRight, bombBottom); //check position from inverse points
-  
-	  if (elBombAtPos.classList.contains("head") || elBombAtPos.classList.contains("body") || elBombAtPosInverse.classList.contains("head") || elBombAtPosInverse.classList.contains("body")) { //check collision from multiple points
-		console.log("Hey - I'm dead");
-		playerDead() // call playerDead function
-		bombControl(elBomb); // call bombControl
-	  }
+		elBomb.style.left = bombLeft - 1 + "px";
+		var elBombAtPos = document.elementFromPoint(bombLeft, bombTop); //check position from top/left points
+		var elBombAtPosInverse = document.elementFromPoint(bombRight, bombBottom); //check position from inverse points
+
+		if (elBombAtPos.classList.contains("head") || elBombAtPos.classList.contains("body") || elBombAtPosInverse.classList.contains("head") || elBombAtPosInverse.classList.contains("body")) { //check collision from multiple points
+			console.log("Hey - I'm dead");
+			playerDead() // call playerDead function
+			bombControl(elBomb); // call bombControl
+		}
 	} else {
-	  bombControl(elBomb); // when bomb reach end of screen (bomb.offsetLeft == 0) then explode
+		bombControl(elBomb); // when bomb reach end of screen (bomb.offsetLeft == 0) then explode
 	}
-  }
+}
 
 //===============================================================================================================
 // end bomb settings
