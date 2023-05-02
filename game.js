@@ -6,6 +6,8 @@ var rightPressed = false;
 var lastPressed = false;
 var timeout = 0;
 var timeoutBomb = 0;
+var repeatBombInterval = 0;
+var bombClearOutInterval = 0;
 
 var selectStartBar = document.getElementsByClassName('start')[0]; //select Start Bar
 var selectTanks = document.getElementsByClassName('tank'); // select tanks
@@ -100,43 +102,40 @@ function removeLife() {
 	var li = healthBar.getElementsByTagName('li');
 	if (li.length > 0) {
 		li[0].remove();
-	  }
+		// call playerhit
+	}
 
-	  else {
+	else {
 		// gameover
 		playerDead(); // call playerDead function
-		clearInterval(repeatBombInterval); // stop bombs when gameover (bomb collides with player)
-	  }
+		document.removeEventListener('keyup', keyup);
+		document.removeEventListener('keydown', keydown);
+	}
 
 }
 
-
+function bombClearOut() { //clear out all bombs from the screen when gameover
+	var bombs = document.getElementsByClassName('bomb');
+	for (var i = 0; i < bombs.length; i++) {
+		bombControl(bombs[i]);
+	}
+}
 
 function playerDead() {
 	var deadPlayer = document.getElementById("player");
-	deadPlayer.classList.add("dead");
-	var removeClassListArray = ["stand", "walk", "up", "down", "left", "right"];
-	for (var i = 0; i < removeClassListArray.length; i++) {
-		deadPlayer.classList.remove(removeClassListArray[i]);
-	}
+	deadPlayer.className = 'character dead';
 	var gameOver = document.getElementsByClassName('start')[0]; // game over bar with dead character
 	gameOver.style.display = "block";
 	gameOver.classList.remove('start');
 	gameOver.classList.add('gameover');
 	gameOver.innerHTML = "Game Over";
+
+	bombClearOutInterval = setInterval(bombClearOut(), 10); //call bombClearOut
+
+	gameOver.addEventListener('click', refreshGame); // call reset game function
 	clearInterval(timeout); // stop checking for movement
-
-	var bombs = document.getElementsByClassName('bomb');
-	for (var i = 0; i < bombs.length; i++) {
-		var bomb = bombs[i].offsetLeft;
-		console.log("value of bomb is: " + bomb)
-
-		if (bomb == 50) {
-			clearInterval(timeoutBomb); // stop adding more bombs and increasing the speed of the game
-			console.log("Code kicked in?");
-		}
-	}
-	gameOver.addEventListener('click', refreshGame); // call reste game function
+	clearInterval(timeoutBomb); // stop adding more bombs and increasing the speed of the game
+	clearInterval(repeatBombInterval); // stop bombs when gameover (bomb collides with player)
 }
 
 function refreshGame() { //reset game
@@ -151,7 +150,7 @@ function refreshGame() { //reset game
 	player.style.left = "200px";
 
 	var health = document.getElementsByClassName('health')[0];
-	
+
 	for (var i = 0; i < 3; i++) {
 		var li = document.createElement("li");
 		health.appendChild(li);
@@ -159,11 +158,13 @@ function refreshGame() { //reset game
 
 	timeout = setInterval(move, 10); //start checking for movement
 
-	// for (var i = 0; i < 3; i++) { //restore no of lifes
-	// 	var healthDiv = document.getElementsByClassName('health')[0];
-	// 	var li = document.createElement("li");
-	// 	healthDiv.appendChild(li);
-	// }
+	upPressed = false; //bug fix when restart stoping the player going on the last direction
+	downPressed = false;
+	leftPressed = false;
+	rightPressed = false;
+	lastPressed = false;
+
+	clearInterval(bombClearOutInterval);
 
 	startGame();
 }
@@ -224,7 +225,7 @@ function moveBomb(elBomb) { //bomb movement + bomb explosion end of screen and b
 			bombControl(elBomb); // call bombControl
 		}
 	} else {
-		bombControl(elBomb); // when bomb reach end of screen (bomb.offsetLeft == 0) then explode
+		bombControl(elBomb);
 	}
 }
 
@@ -252,6 +253,8 @@ function randomTanksSpawn(tank) { // randomize tank css position
 	tank.style.display = "block";
 	tank.style.top = randomize + "px";
 	console.log("Value of the tank is" + tank);
+
+
 }
 
 function myLoadFunction() {
@@ -284,17 +287,17 @@ function triggerTankSpawn() {
 	}
 }
 
-var repeatBombInterval = setInterval(triggerTankSpawn, 5000); // clearInterval purpose
-
 //end triggers
 
 function startGame() {
 	selectStartBar.style.display = "none";
-	setInterval(triggerTankSpawn, 5000); // tank spawn
-
+	lastPressed = false;
+	repeatBombInterval = setInterval(triggerTankSpawn, 5000); // spawn bomb and tank each 5 sec
 	timeoutBomb = setInterval(function () {
 		triggerMoveBomb(moveBomb);
 	}, 10); // ignite bomb movement	
+	document.addEventListener('keydown', keydown);
+	document.addEventListener('keyup', keyup);
 }
 
 document.addEventListener('DOMContentLoaded', myLoadFunction);
