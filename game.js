@@ -98,11 +98,14 @@ function keydown(event) {
 }
 
 function removeLife() {
+	var player = document.getElementById("player");
+	
 	var healthBar = document.getElementsByClassName('health')[0];
 	var li = healthBar.getElementsByTagName('li');
 	if (li.length > 0) {
 		li[0].remove();
-		// call playerhit
+		player.className = 'character hit';
+		
 	}
 
 	else {
