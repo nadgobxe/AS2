@@ -120,7 +120,7 @@ function addBomb() {
 		console.log(tanks[i].offsetLeft);
 	}
 
-	clearInterval(timeoutBomb);
+	clearInterval(timeoutBomb); // when addBomb repeats we clearInterval to avoid increasing the speed of the bombs
 	
 }
 // end ========================================================================================
