@@ -92,14 +92,40 @@ function keydown(event) {
 		downPressed = true;
 	}
 }
+// explode bombs ====================================================================================
+function explodeBomb(bomb) {
+
+    var explosion = document.createElement('div');
+    explosion.classList.add('explosion');
+    document.body.appendChild(explosion);
+
+    explosion.style.left = bomb.offsetLeft + 15 + "px";
+    explosion.style.top = bomb.offsetTop + 15 + "px";
+
+	function explosionOff() {
+		explosion.classList.remove('explosion');
+	}
+
+	setTimeout(explosionOff, 1000) // bomb control - 3rd part sets explosion off after 1 sec
+
+}
+// end ==============================================================================================
+
 
 // move bombs =======================================================================================
 function moveBomb() {
-	var bombs = document.getElementsByClassName('bomb')
-	for (var i = 0; i < bombs.length; i++) {
-	var bombsInitialPosition = bombs[i].offsetLeft;
-	bombs[i].style.left = bombsInitialPosition - 1 + "px";
-}
+    var bombs = document.getElementsByClassName('bomb');
+    for (var i = 0; i < bombs.length; i++) {
+        var bombsInitialPosition = bombs[i].offsetLeft;
+        if (bombsInitialPosition > 0) {
+            bombs[i].style.left = bombsInitialPosition - 1 + "px";
+        } else {
+            explodeBomb(bombs[i]);
+            bombs[i].remove();
+			
+        }
+		
+    }
 }
 // end bombs ========================================================================================
 
@@ -122,6 +148,7 @@ function addBomb() {
 
 	clearInterval(timeoutBomb); // when addBomb repeats we clearInterval to avoid increasing the speed of the bombs
 	
+
 }
 // end ========================================================================================
 
@@ -147,7 +174,7 @@ function spawnTanks() {
 
 	addBomb();
 	timeoutBomb = setInterval(moveBomb, 10);
-	
+
 }
 // end =============================================================================================
 
