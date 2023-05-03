@@ -96,7 +96,7 @@ function keydown(event) {
 		downPressed = true;
 	}
 }
-
+/// suport for player hit animation ////
 function removeEventDom() {
 	document.removeEventListener('keyup', keyup);
 	document.removeEventListener('keydown', keydown);
@@ -112,24 +112,25 @@ function activateEvenDom() {
 	document.addEventListener('keydown', keydown);
 }
 
+//////////////////////////////// end
+
 function removeLife() {
 	var player = document.getElementById("player");
 	
 	var healthBar = document.getElementsByClassName('health')[0];
 	var li = healthBar.getElementsByTagName('li');
-	if (li.length > 0) {
+	if (li.length > 1) {
 		li[0].remove();
 		player.className = 'character hit  ' + lastPressed; //hit feature
 		removeEventDom(); // remove keyCode event listener
-		setTimeout(activateEvenDom, 2000); // start walking
-
-		
+		setTimeout(activateEvenDom, 1000); // resume walking 1 sec after impact
 	}
 
 	else {
 		// gameover
 		playerDead(); // call playerDead function
-		removeEventDom();
+		removeEventDom(); // remove keyCode event listener when gameover
+		li[0].remove(); // remove the last life - call gameover
 	}
 
 }
@@ -148,9 +149,10 @@ function playerDead() {
 	gameOver.style.display = "block";
 	gameOver.classList.remove('start');
 	gameOver.classList.add('gameover');
-	gameOver.innerHTML = "Game Over";
+	gameOver.innerHTML = "GAME OVER - PLAY AGAIN";
 
 	bombClearOutInterval = setInterval(bombClearOut(), 10); //call bombClearOut
+	setTimeout = (bombClearOut, 1000);
 
 	gameOver.addEventListener('click', refreshGame); // call reset game function
 	clearInterval(timeout); // stop checking for movement
@@ -184,9 +186,8 @@ function refreshGame() { //reset game
 	rightPressed = false;
 	lastPressed = false;
 
-	clearInterval(bombClearOutInterval);
-
 	startGame();
+	conditionTrigger = 0;
 }
 //start random bomb explode
 var conditionTrigger = 0;
