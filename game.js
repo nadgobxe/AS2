@@ -114,19 +114,32 @@ function randomExplode() {
 randomExplode(); // call function first time
 // end ==============================================================================================
 
+// gameOver =========================================================================================
+
+//end ===============================================================================================
+
 
 // dead player ======================================================================================
+function deadPlayer() {
+	var player = document.getElementById('player');
+	player.className = 'character dead';
 
+	// reactivate when refresh game
+	document.removeEventListener('keydown', keydown);
+	document.removeEventListener('keyup', keyup);
+	clearInterval(timeoutTanks);
+	clearInterval(timeout);
+}
 // end ==============================================================================================
 // explode bombs ====================================================================================
 function explodeBomb(bomb) {
 
-    var explosion = document.createElement('div');
-    explosion.classList.add('explosion');
-    document.body.appendChild(explosion);
+	var explosion = document.createElement('div');
+	explosion.classList.add('explosion');
+	document.body.appendChild(explosion);
 
-    explosion.style.left = bomb.offsetLeft + 15 + "px";
-    explosion.style.top = bomb.offsetTop + 15 + "px";
+	explosion.style.left = bomb.offsetLeft + 15 + "px";
+	explosion.style.top = bomb.offsetTop + 15 + "px";
 
 	function explosionOff() {
 		explosion.classList.remove('explosion');
@@ -141,26 +154,39 @@ function explodeBomb(bomb) {
 // move bombs =======================================================================================
 function moveBomb() {
 
-    var bombs = document.getElementsByClassName('bomb');
+	var bombs = document.getElementsByClassName('bomb');
 
-    for (var i = 0; i < bombs.length; i++) {
+	for (var i = 0; i < bombs.length; i++) {
 
-        var bombsInitialPosition = bombs[i].offsetLeft;
+		var bombLeft = bombs[i].offsetLeft;
+		var bombTop = bombs[i].offsetTop;
+		var bombRight = bombs[i].offsetLeft + 31;
+		var bombBottom = bombs[i].offsetTop + 10;
 
-        if (bombsInitialPosition > conditionTrigger) { //randomPoint
+		if (bombLeft > conditionTrigger) { //randomPoint
 
-            bombs[i].style.left = bombsInitialPosition - 1 + "px";
+			bombs[i].style.left = bombLeft - 1 + "px";
 
-		// is statement for player collision with bomb
+			var elBombAtPos = document.elementFromPoint(bombLeft, bombTop); //check position from top/left points
+			var elBombAtPosInverse = document.elementFromPoint(bombRight, bombBottom); //check position from inverse points
 
-        } else {
+			// is statement for player collision with bomb
 
-            explodeBomb(bombs[i]);
-            bombs[i].remove();
-			
-        }
-		
-    }
+			if (elBombAtPos.classList.contains("head") || elBombAtPos.classList.contains("body") || elBombAtPosInverse.classList.contains("head") || elBombAtPosInverse.classList.contains("body")) { //check collision from multiple points
+			console.log("Hey - I'm dead");
+			deadPlayer();
+			explodeBomb(bombs[i]);
+			bombs[i].remove();
+		}
+
+		} else {
+
+			explodeBomb(bombs[i]);
+			bombs[i].remove();
+
+		}
+
+	}
 }
 // end bombs ========================================================================================
 
@@ -183,7 +209,7 @@ function addBomb() {
 
 	clearInterval(timeoutBomb); // when addBomb repeats we clearInterval to avoid increasing the speed of the bombs
 	randomExplode();
-	
+
 
 }
 // end ========================================================================================
@@ -233,7 +259,7 @@ function myLoadFunction() {
 	timeout = setInterval(move, 10);
 	document.addEventListener('keydown', keydown);
 	document.addEventListener('keyup', keyup);
-	
+
 
 	//hide tanks
 	for (var i = 0; i < tanks.length; i++) {
