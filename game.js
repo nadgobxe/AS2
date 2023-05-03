@@ -9,6 +9,7 @@ var tanks = document.getElementsByClassName('tank');
 
 var timeoutTanks = 0;
 var timeout = 0;
+var timeoutBomb = 0;
 
 function keyup(event) {
 	var player = document.getElementById('player');
@@ -91,42 +92,81 @@ function keydown(event) {
 		downPressed = true;
 	}
 }
-// remove start bar
-function removeStartBar() {
+
+// move bombs =======================================================================================
+function moveBomb() {
+	var bombs = document.getElementsByClassName('bomb')
+	for (var i = 0; i < bombs.length; i++) {
+	var bombsInitialPosition = bombs[i].offsetLeft;
+	bombs[i].style.left = bombsInitialPosition - 1 + "px";
+}
+}
+// end bombs ========================================================================================
+
+
+// add bombs ========================================================================================
+function addBomb() {
+
+	var body = document.body;
+
+	for (var i = 0; i < tanks.length; i++) {
+		var bomb = document.createElement('div');
+		bomb.classList.add('bomb');
+		body.appendChild(bomb);
+
+		bomb.style.top = tanks[i].offsetTop + 10 + "px";
+		bomb.style.left = tanks[i].offsetLeft + "px";
+
+		console.log(tanks[i].offsetLeft);
+	}
+
+	clearInterval(timeoutBomb);
+	
+}
+// end ========================================================================================
+
+
+// spawn randomly tanks ==============================================================================
+function spawnTanks() {
+	var windowHeight = window.innerHeight;
+
+	for (var i = 0; i < tanks.length; i++) {
+		randomPointY = (Math.floor(Math.random() * windowHeight));
+		// console.log("Value of WindowHeight is" + tanks[i].style.top);
+		tanks[i].style.top = randomPointY + 68 + "px";
+
+		var tankTopValue = tanks[i].style.top;
+		var parseTankTopValue = parseInt(tankTopValue);
+		// console.log(parseTankTopValue);
+
+		if (windowHeight < parseTankTopValue + 68) { //avoid tank going off from the canvas
+			// console.log("Value of WindowHeight is -<<<<<" + windowHeight);
+			tanks[i].style.top = randomPointY - 68 + "px";
+		}
+	}
+
+	addBomb();
+	timeoutBomb = setInterval(moveBomb, 10);
+	
+}
+// end =============================================================================================
+
+
+// start game  || remove start bar || add tanks ====================================================
+function startGame() {
 	startBar.style.display = "none";
+	timeoutTanks = setInterval(spawnTanks, 2500);
 
 	//show tanks
 	for (var i = 0; i < tanks.length; i++) {
 		tanks[i].style.display = "block";
 	}
 }
-startBar.addEventListener('click', removeStartBar);
-//end 
+startBar.addEventListener('click', startGame);
+//end ================================================================================================
 
-// spawn randomly tanks
-function spawnTanks() {
-	var windowHeight = window.innerHeight;
-	for (var i = 0; i < tanks.length; i++) {
-		randomPointY = (Math.floor(Math.random() * windowHeight));
-		console.log("Value of WindowHeight is" + tanks[i].style.top);
-		tanks[i].style.top = randomPointY + 68 + "px";
-
-		var tankTopValue = tanks[i].style.top;
-		var parseTankTopValue = parseInt(tankTopValue);
-		console.log(parseTankTopValue);
-
-		if (windowHeight < parseTankTopValue + 68) { //avoid tank going off from the canvas
-			console.log("Value of WindowHeight is -<<<<<" + windowHeight);
-			tanks[i].style.top = randomPointY - 68 + "px";
-		}
-	}
-
-
-}
-// end
 
 function myLoadFunction() {
-	timeoutTanks = setInterval(spawnTanks, 1000);
 	timeout = setInterval(move, 10);
 	document.addEventListener('keydown', keydown);
 	document.addEventListener('keyup', keyup);
