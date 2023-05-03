@@ -97,21 +97,6 @@ function keydown(event) {
 	}
 }
 
-function removeEventDom() {
-	document.removeEventListener('keyup', keyup);
-	document.removeEventListener('keydown', keydown);
-	upPressed = false; //bug fix when restart stoping the player going on the last direction
-	downPressed = false;
-	leftPressed = false;
-	rightPressed = false;
-	lastPressed = false;
-}
-
-function activateEvenDom() {
-	document.addEventListener('keyup', keyup);
-	document.addEventListener('keydown', keydown);
-}
-
 function removeLife() {
 	var player = document.getElementById("player");
 	
@@ -119,17 +104,15 @@ function removeLife() {
 	var li = healthBar.getElementsByTagName('li');
 	if (li.length > 0) {
 		li[0].remove();
-		player.className = 'character hit  ' + lastPressed; //hit feature
-		removeEventDom(); // remove keyCode event listener
-		setTimeout(activateEvenDom, 2000); // start walking
-
+		player.className = 'character hit';
 		
 	}
 
 	else {
 		// gameover
 		playerDead(); // call playerDead function
-		removeEventDom();
+		document.removeEventListener('keyup', keyup);
+		document.removeEventListener('keydown', keydown);
 	}
 
 }
@@ -211,8 +194,8 @@ function bombControl(elBomb) { //bomb explosion
 	var top = elBomb.offsetTop;
 	var left = elBomb.offsetLeft;
 
-	explosion.style.top = top + 15 + "px";
-	explosion.style.left = left + 15 + "px";
+	explosion.style.top = top + "px";
+	explosion.style.left = left + "px";
 	document.body.appendChild(explosion);
 	explosion.style.position = "absolute";
 
@@ -245,7 +228,7 @@ function moveBomb(elBomb) { //bomb movement + bomb explosion end of screen and b
 			bombControl(elBomb); // call bombControl
 		}
 	} else {
-		bombControl(elBomb), 1500;
+		bombControl(elBomb);
 	}
 }
 
