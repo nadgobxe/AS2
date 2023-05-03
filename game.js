@@ -10,6 +10,9 @@ var tanks = document.getElementsByClassName('tank');
 var timeoutTanks = 0;
 var timeout = 0;
 var timeoutBomb = 0;
+var timeoutRandomExplode = 0;
+
+var conditionTrigger = 0;
 
 function keyup(event) {
 	var player = document.getElementById('player');
@@ -38,43 +41,46 @@ function move() {
 	var player = document.getElementById('player');
 	var positionLeft = player.offsetLeft;
 	var positionTop = player.offsetTop;
-	if (downPressed) {
+
+	if (downPressed == true) {
 		var newTop = positionTop + 1;
+		var element = document.elementFromPoint(positionLeft, newTop + 46); /* Detect position X/Y axis and return the top element at the specified coordinates. In our case, we would like to find when we collide with the 'cactus' class. To do that, we have to check for element.classList.contains('cactus') */
 
-		player.style.top = newTop + 'px';
+		console.log("Value of Element is :" + element.className);
 
-		if (leftPressed == false) {
-			if (rightPressed == false) {
-				player.className = 'character walk down';
-			}
+		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false) {
+			player.style.top = newTop + 'px';
 		}
+		player.className = 'character walk down';
+
 	}
-	if (upPressed) {
+	if (upPressed == true) {
 		var newTop = positionTop - 1;
+		var element = document.elementFromPoint(positionLeft, newTop);
 
-		player.style.top = newTop + 'px';
-
-		if (leftPressed == false) {
-			if (rightPressed == false) {
-				player.className = 'character walk up';
-			}
+		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false) {
+			player.style.top = newTop + 'px';
 		}
+		player.className = 'character walk up';
 	}
-	if (leftPressed) {
+	if (leftPressed == true) {
 		var newLeft = positionLeft - 1;
+		var element = document.elementFromPoint(newLeft, positionTop);
 
-		player.style.left = newLeft + 'px';
-
+		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false) {
+			player.style.left = newLeft + 'px';
+		}
 		player.className = 'character walk left';
 	}
-	if (rightPressed) {
+	if (rightPressed == true) {
 		var newLeft = positionLeft + 1;
+		var element = document.elementFromPoint(newLeft + 32, positionTop);
 
-		player.style.left = newLeft + 'px';
-
+		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false) {
+			player.style.left = newLeft + 'px';
+		}
 		player.className = 'character walk right';
 	}
-
 }
 
 
@@ -92,6 +98,26 @@ function keydown(event) {
 		downPressed = true;
 	}
 }
+
+
+// randomPoint ======================================================================================
+function randomExplode() {
+
+	var windowWidth = window.innerWidth; //get canvas total width
+
+	var retriveTank = document.getElementsByClassName('tank')[0];
+	var offsetTankLeft = retriveTank.offsetLeft;
+
+	var canvasLength = windowWidth - offsetTankLeft; // value of remaining distance from tank to left end of the canvas
+	conditionTrigger = Math.floor(canvasLength * Math.random()); // modify conditionTrigger value in the global scope
+}
+randomExplode(); // call function first time
+// end ==============================================================================================
+
+
+// dead player ======================================================================================
+
+// end ==============================================================================================
 // explode bombs ====================================================================================
 function explodeBomb(bomb) {
 
@@ -114,12 +140,21 @@ function explodeBomb(bomb) {
 
 // move bombs =======================================================================================
 function moveBomb() {
+
     var bombs = document.getElementsByClassName('bomb');
+
     for (var i = 0; i < bombs.length; i++) {
+
         var bombsInitialPosition = bombs[i].offsetLeft;
-        if (bombsInitialPosition > 0) {
+
+        if (bombsInitialPosition > conditionTrigger) { //randomPoint
+
             bombs[i].style.left = bombsInitialPosition - 1 + "px";
+
+		// is statement for player collision with bomb
+
         } else {
+
             explodeBomb(bombs[i]);
             bombs[i].remove();
 			
@@ -147,6 +182,7 @@ function addBomb() {
 	}
 
 	clearInterval(timeoutBomb); // when addBomb repeats we clearInterval to avoid increasing the speed of the bombs
+	randomExplode();
 	
 
 }
@@ -197,6 +233,7 @@ function myLoadFunction() {
 	timeout = setInterval(move, 10);
 	document.addEventListener('keydown', keydown);
 	document.addEventListener('keyup', keyup);
+	
 
 	//hide tanks
 	for (var i = 0; i < tanks.length; i++) {
