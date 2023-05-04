@@ -14,6 +14,8 @@ var timeoutRandomExplode = 0;
 
 var conditionTrigger = 0;
 var score = 0;
+var level = 1;
+var hiddenScore = 0; //increase level
 
 function keyup(event) {
 	var player = document.getElementById('player');
@@ -99,6 +101,33 @@ function keydown(event) {
 		downPressed = true;
 	}
 }
+
+//design level bar ==================================================================================
+function designLevel() {
+	var elLevel = document.createElement('div');
+	var hud = document.getElementsByClassName('hud')[0];
+	hud.appendChild(elLevel);
+	elLevel.classList.add('level');
+	elLevel.style.marginLeft = "25px";
+	elLevel.style.marginTop = "25px";
+	elLevel.style.fontFamily = "Anton";
+	elLevel.style.fontSize = "2em";
+	elLevel.style.color = "#257000";
+	elLevel.style.textShadow = "2px 2px 2px #000";
+	elLevel.innerHTML = "Your Level: " + level;
+}
+// end ==============================================================================================
+// level up =========================================================================================
+function levelUp() {
+	if (hiddenScore == 10) {
+		level++;
+		hiddenScore = 0; // reset hiddenScore
+		var elLevel = document.getElementsByClassName('level')[0];
+		elLevel.innerHTML = "Your Level: " + level;
+	}
+}
+
+// end ==============================================================================================
 // create Scoring system GUI functional and counting the bombs avoided ==============================
 function scoreCount() {
 	var elScore = document.createElement('div');
@@ -110,14 +139,16 @@ function scoreCount() {
 	elScore.style.fontFamily = "Anton";
 	elScore.style.fontSize = "2em";
 	elScore.style.color = "#257000"
+	elScore.style.textShadow = "2px 2px 2px #000";
 	elScore.innerHTML = "Your Score: " + score;
+
 } // call on lines 293 - 295
 // end ==============================================================================================
 //remove life =======================================================================================
 function removeEventDom() { //bug fix when restart stoping the player going on the last direction ===
 	document.removeEventListener('keyup', keyup);
 	document.removeEventListener('keydown', keydown);
-	upPressed = false; 
+	upPressed = false;
 	downPressed = false;
 	leftPressed = false;
 	rightPressed = false;
@@ -135,7 +166,7 @@ function removeLife() {
 
 	var player = document.getElementById("player");
 	var healthBar = document.getElementsByClassName('health')[0];
-	
+
 	var li = healthBar.getElementsByTagName('li');
 	if (li.length > 1) {
 		li[0].remove();
@@ -221,6 +252,14 @@ function restartGame() {
 		var li = document.createElement("li");
 		health.appendChild(li);
 	}
+	var elLevel = document.getElementsByClassName('level')[0];
+	elLevel.innerHTML = "Your Level: 1";
+
+	var elScore = document.getElementsByClassName('score')[0];
+	elScore.innerHTML = "Your Score: 0";
+	score = 0;
+	level = 1;
+	hiddenScore = 0;
 }
 // end ==============================================================================================
 
@@ -270,7 +309,12 @@ function moveBomb() {
 
 		if (bombLeft > conditionTrigger) { //randomPoint
 
-			bombs[i].style.left = bombLeft - 1 + "px";
+			//random bomb speed =================================================================================
+			// I'm planning to do a Math.Ceil(Math.Random() * level)
+			var randomBombSpeed = Math.ceil(Math.random() * level + 0.5);
+			console.log("My speed is:" + randomBombSpeed);
+
+			bombs[i].style.left = bombLeft - randomBombSpeed + "px";
 
 			var elBombAtPos = document.elementFromPoint(bombLeft, bombTop); //check position from top/left points
 			var elBombAtPosInverse = document.elementFromPoint(bombRight, bombBottom); //check position from inverse points
@@ -292,7 +336,9 @@ function moveBomb() {
 			bombs[i].remove();
 			var elScore = document.getElementsByClassName('score')[0]; /////  SCORE COUNTER =========
 			score++;
+			hiddenScore++;
 			elScore.innerHTML = "Your Score: " + score;
+			levelUp(); //call function
 
 		}
 
@@ -322,8 +368,31 @@ function addBomb() {
 
 
 }
-// end ========================================================================================
+// end ============================================================================================
 
+
+// avoid tank overlap =============================================================================
+function avoidTankOverlap() {
+	var tankArray = ["tank one", "tank two", "tank three"];
+	var elTank = document.getElementsByClassName('tank');
+  
+	for (var i = 0; i < elTank.length; i++) {
+	  var left = elTank[i].offsetLeft;
+	  var top = elTank[i].offsetTop;
+	  var el = document.elementFromPoint(left, top);
+  
+	  for (var j = 0; j < elTank.length; j++) {
+		if (i != j && el.classList.contains(tankArray[j])) {
+		  var newTop = Math.floor(Math.random() * (window.innerHeight - 136));
+		  var newLeft = Math.floor(Math.random() * (window.innerWidth - 80));
+		  elTank[i].style.top = newTop + 'px';
+		  elTank[i].style.left = newLeft + 'px';
+		  i = 0; // reset i to start again from first tank
+		}
+	  }
+	}
+  }
+// end ============================================================================================
 
 // spawn randomly tanks ==============================================================================
 function spawnTanks() {
@@ -346,6 +415,7 @@ function spawnTanks() {
 
 	addBomb();
 	timeoutBomb = setInterval(moveBomb, 10);
+	voidTankOverlap();
 
 }
 // end =============================================================================================
@@ -370,6 +440,7 @@ function myLoadFunction() {
 	document.addEventListener('keydown', keydown);
 	document.addEventListener('keyup', keyup);
 	scoreCount();
+	designLevel();
 
 
 	//hide tanks
