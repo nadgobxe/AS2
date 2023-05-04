@@ -99,6 +99,59 @@ function keydown(event) {
 	}
 }
 
+//remove life =======================================================================================
+function removeEventDom() { //bug fix when restart stoping the player going on the last direction ===
+	document.removeEventListener('keyup', keyup);
+	document.removeEventListener('keydown', keydown);
+	upPressed = false; 
+	downPressed = false;
+	leftPressed = false;
+	rightPressed = false;
+	lastPressed = false;
+}
+
+
+function activateEvenDom() { //reinstante the movement ==============================================
+	document.addEventListener('keyup', keyup);
+	document.addEventListener('keydown', keydown);
+}
+
+
+function removeLife() {
+
+	var player = document.getElementById("player");
+	var healthBar = document.getElementsByClassName('health')[0];
+	
+	var li = healthBar.getElementsByTagName('li');
+	if (li.length > 1) {
+		li[0].remove();
+		player.className = 'character hit ' + lastPressed; //hit feature
+		removeEventDom(); // remove keyCode event listener
+		setTimeout(activateEvenDom, 2000); // start walking		
+	}
+
+	else {
+		// gameover
+		deadPlayer();
+		gameOver();
+		li[0].remove();
+	}
+
+}
+//end ===============================================================================================
+
+//bomb clear out when gameOver ======================================================================
+function bombClearOut() {
+	var bombs = document.getElementsByClassName('bomb');
+
+	for (var i = bombs.length - 1; i >= 0; i--) {
+		bombs[i].classList.remove('bomb');
+
+	}
+
+}
+// end ==============================================================================================
+
 
 // randomPoint ======================================================================================
 function randomExplode() {
@@ -115,9 +168,47 @@ randomExplode(); // call function first time
 // end ==============================================================================================
 
 // gameOver =========================================================================================
+function gameOver() {
+	var gameOver = document.getElementsByClassName('start')[0]; // game over bar with dead character
 
+	gameOver.style.display = "block";
+	gameOver.classList.remove('start');
+	gameOver.classList.add('gameover');
+	gameOver.innerHTML = "Game Over <br> Try Again!";
+	gameOver.addEventListener('click', restartGame);
+
+	bombClearOut(); // should clear-out all the bombs when gameover
+}
 //end ===============================================================================================
 
+// restart game =====================================================================================
+function restartGame() {
+	var gameOver = document.getElementsByClassName('gameover')[0];
+	gameOver.classList.add('start');
+	gameOver.style.display = "none";
+
+	var player = document.getElementById('player'); // restore player position and class
+	player.className = 'character stand';
+	player.style.top = "80vh";
+	player.style.left = "200px";
+
+	document.addEventListener('keydown', keydown); //restore movement
+	document.addEventListener('keyup', keyup);
+	timeout = setInterval(move, 10);
+	upPressed = false;
+	downPressed = false;
+	leftPressed = false;
+	rightPressed = false;
+	lastPressed = false;
+
+	var health = document.getElementsByClassName('health')[0];
+
+	for (var i = 0; i < 3; i++) {
+		var li = document.createElement("li");
+		health.appendChild(li);
+	}
+}
+// end ==============================================================================================
 
 // dead player ======================================================================================
 function deadPlayer() {
@@ -173,11 +264,13 @@ function moveBomb() {
 			// is statement for player collision with bomb
 
 			if (elBombAtPos.classList.contains("head") || elBombAtPos.classList.contains("body") || elBombAtPosInverse.classList.contains("head") || elBombAtPosInverse.classList.contains("body")) { //check collision from multiple points
-			console.log("Hey - I'm dead");
-			deadPlayer();
-			explodeBomb(bombs[i]);
-			bombs[i].remove();
-		}
+				// console.log("Hey - I'm dead");
+
+				explodeBomb(bombs[i]);
+				// bombs[i].parentNode.removeChild(bombs[i]);
+				bombs[i].remove();
+				removeLife();
+			}
 
 		} else {
 
