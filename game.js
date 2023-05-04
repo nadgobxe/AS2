@@ -111,7 +111,7 @@ function scoreCount() {
 	elScore.style.fontSize = "2em";
 	elScore.style.color = "#257000"
 	elScore.innerHTML = "Your Score: " + score;
-}
+} // call on lines 293 - 295
 // end ==============================================================================================
 //remove life =======================================================================================
 function removeEventDom() { //bug fix when restart stoping the player going on the last direction ===
@@ -290,6 +290,9 @@ function moveBomb() {
 
 			explodeBomb(bombs[i]);
 			bombs[i].remove();
+			var elScore = document.getElementsByClassName('score')[0]; /////  SCORE COUNTER =========
+			score++;
+			elScore.innerHTML = "Your Score: " + score;
 
 		}
 
