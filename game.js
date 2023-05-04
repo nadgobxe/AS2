@@ -13,6 +13,7 @@ var timeoutBomb = 0;
 var timeoutRandomExplode = 0;
 
 var conditionTrigger = 0;
+var score = 0;
 
 function keyup(event) {
 	var player = document.getElementById('player');
@@ -98,7 +99,20 @@ function keydown(event) {
 		downPressed = true;
 	}
 }
-
+// create Scoring system GUI functional and counting the bombs avoided ==============================
+function scoreCount() {
+	var elScore = document.createElement('div');
+	var hud = document.getElementsByClassName('hud')[0];
+	hud.appendChild(elScore);
+	elScore.classList.add('score');
+	elScore.style.marginLeft = "25px";
+	elScore.style.marginTop = "25px";
+	elScore.style.fontFamily = "Anton";
+	elScore.style.fontSize = "2em";
+	elScore.style.color = "#257000"
+	elScore.innerHTML = "Your Score: " + score;
+}
+// end ==============================================================================================
 //remove life =======================================================================================
 function removeEventDom() { //bug fix when restart stoping the player going on the last direction ===
 	document.removeEventListener('keyup', keyup);
@@ -352,6 +366,7 @@ function myLoadFunction() {
 	timeout = setInterval(move, 10);
 	document.addEventListener('keydown', keydown);
 	document.addEventListener('keyup', keyup);
+	scoreCount();
 
 
 	//hide tanks
