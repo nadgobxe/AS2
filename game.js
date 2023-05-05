@@ -16,6 +16,7 @@ var conditionTrigger = 0;
 var score = 0;
 var level = 1;
 var hiddenScore = 0; //increase level
+var directions = [-3 -2, -1, 0, + 1, + 2, + 3];
 
 function keyup(event) {
 	var player = document.getElementById('player');
@@ -49,7 +50,7 @@ function move() {
 		var newTop = positionTop + 1;
 		var element = document.elementFromPoint(positionLeft, newTop + 46); /* Detect position X/Y axis and return the top element at the specified coordinates. In our case, we would like to find when we collide with the 'cactus' class. To do that, we have to check for element.classList.contains('cactus') */
 
-		console.log("Value of Element is :" + element.className);
+		// console.log("Value of Element is :" + element.className);
 
 		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false) {
 			player.style.top = newTop + 'px';
@@ -202,12 +203,20 @@ function bombClearOut() {
 function randomExplode() {
 
 	var windowWidth = window.innerWidth; //get canvas total width
+	var windowHeight = window.innerHeight; //get canvas total height
+	console.log("Height is:" + windowHeight);
 
 	var retriveTank = document.getElementsByClassName('tank')[0];
 	var offsetTankLeft = retriveTank.offsetLeft;
 
-	var canvasLength = windowWidth - offsetTankLeft; // value of remaining distance from tank to left end of the canvas
+	var canvasLength = windowWidth - (offsetTankLeft / 2); // value of remaining distance from tank to left end of the canvas
+
+
 	conditionTrigger = Math.floor(canvasLength * Math.random()); // modify conditionTrigger value in the global scope
+	console.log(conditionTrigger);
+	console.log("WW:" + windowWidth);
+	console.log("OT:" + offsetTankLeft)
+
 }
 randomExplode(); // call function first time
 // end ==============================================================================================
@@ -287,6 +296,7 @@ function explodeBomb(bomb) {
 
 	function explosionOff() {
 		explosion.classList.remove('explosion');
+		explosion.remove();
 	}
 
 	setTimeout(explosionOff, 1000) // bomb control - 3rd part sets explosion off after 1 sec
@@ -306,16 +316,33 @@ function moveBomb() {
 		var bombTop = bombs[i].offsetTop;
 		var bombRight = bombs[i].offsetLeft + 31;
 		var bombBottom = bombs[i].offsetTop + 10;
+		var windowHeight = window.innerHeight;
 
-		if (bombLeft > conditionTrigger) { //randomPoint
 
+		if ((bombLeft > conditionTrigger) && (bombLeft > conditionTrigger || bombTop > 0) && (bombTop >= 0 && bombBottom <= windowHeight)) { // if all of them true bomb move if one of them false bombs explodes
+			// console.log("top value is" + bombTop);
 			//random bomb speed =================================================================================
 			// I'm planning to do a Math.Ceil(Math.Random() * level)
+			
+			// console.log("My speed is:" + randomBombSpeed);
+			// console.log("value bombbTop" + bombTop);
+			// console.log("value bombbBottom" + bombBottom);
+
 			var randomBombSpeed = Math.ceil(Math.random() * level + 0.5);
-			console.log("My speed is:" + randomBombSpeed);
 
 			bombs[i].style.left = bombLeft - randomBombSpeed + "px";
 
+			for (var j = 0; j < directions.length; j++) {
+				bombs[i].style.top = bombTop - directions[j] + "px";
+				console.log(directions[j]);
+			}
+			
+
+			var testBomb = bombs[i].style.top;
+			console.log(testBomb);
+
+
+			// end random direction ====================================================================
 			var elBombAtPos = document.elementFromPoint(bombLeft, bombTop); //check position from top/left points
 			var elBombAtPosInverse = document.elementFromPoint(bombRight, bombBottom); //check position from inverse points
 
@@ -325,7 +352,6 @@ function moveBomb() {
 				// console.log("Hey - I'm dead");
 
 				explodeBomb(bombs[i]);
-				// bombs[i].parentNode.removeChild(bombs[i]);
 				bombs[i].remove();
 				removeLife();
 			}
@@ -360,7 +386,7 @@ function addBomb() {
 		bomb.style.top = tanks[i].offsetTop + 10 + "px";
 		bomb.style.left = tanks[i].offsetLeft + "px";
 
-		console.log(tanks[i].offsetLeft);
+		// console.log(tanks[i].offsetLeft);
 	}
 
 	clearInterval(timeoutBomb); // when addBomb repeats we clearInterval to avoid increasing the speed of the bombs
@@ -370,29 +396,6 @@ function addBomb() {
 }
 // end ============================================================================================
 
-
-// avoid tank overlap =============================================================================
-function avoidTankOverlap() {
-	var tankArray = ["tank one", "tank two", "tank three"];
-	var elTank = document.getElementsByClassName('tank');
-  
-	for (var i = 0; i < elTank.length; i++) {
-	  var left = elTank[i].offsetLeft;
-	  var top = elTank[i].offsetTop;
-	  var el = document.elementFromPoint(left, top);
-  
-	  for (var j = 0; j < elTank.length; j++) {
-		if (i != j && el.classList.contains(tankArray[j])) {
-		  var newTop = Math.floor(Math.random() * (window.innerHeight - 136));
-		  var newLeft = Math.floor(Math.random() * (window.innerWidth - 80));
-		  elTank[i].style.top = newTop + 'px';
-		  elTank[i].style.left = newLeft + 'px';
-		  i = 0; // reset i to start again from first tank
-		}
-	  }
-	}
-  }
-// end ============================================================================================
 
 // spawn randomly tanks ==============================================================================
 function spawnTanks() {
@@ -415,7 +418,6 @@ function spawnTanks() {
 
 	addBomb();
 	timeoutBomb = setInterval(moveBomb, 10);
-	voidTankOverlap();
 
 }
 // end =============================================================================================
@@ -425,7 +427,6 @@ function spawnTanks() {
 function startGame() {
 	startBar.style.display = "none";
 	timeoutTanks = setInterval(spawnTanks, 2500);
-
 	//show tanks
 	for (var i = 0; i < tanks.length; i++) {
 		tanks[i].style.display = "block";
