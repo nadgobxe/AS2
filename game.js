@@ -16,7 +16,7 @@ var conditionTrigger = 0;
 var score = 0;
 var level = 1;
 var hiddenScore = 0; //increase level
-var directions = [-3 -2, -1, 0, + 1, + 2, + 3];
+var directions = [-3 - 2, -1, 0, + 1, + 2, + 3];
 
 function keyup(event) {
 	var player = document.getElementById('player');
@@ -162,6 +162,22 @@ function activateEvenDom() { //reinstante the movement =========================
 	document.addEventListener('keydown', keydown);
 }
 
+// add life =========================================================================================
+function addLife() {
+	// retrieve health  bar elements
+	var healthBar = document.getElementsByClassName('health')[0];
+	var currentLi = healthBar.getElementsByTagName('li');
+	var li = document.createElement('li');
+	// console.log("this is hiddenScore" + hiddenScore);
+	// console.log("this is li length" + currentLi.length);
+	if ((hiddenScore == 9) && (currentLi.length < 3)) {
+		healthBar.appendChild(li);
+		// console.log("addLife active");
+
+	}
+}
+// end ===============================================================================================
+
 
 function removeLife() {
 
@@ -171,10 +187,26 @@ function removeLife() {
 	var li = healthBar.getElementsByTagName('li');
 	if (li.length > 1) {
 		li[0].remove();
-		player.className = 'character hit ' + lastPressed; //hit feature
+		player.className = 'character ' + lastPressed + ' hit'; //hit feature
 		removeEventDom(); // remove keyCode event listener
-		setTimeout(activateEvenDom, 2000); // start walking		
-	}
+		setTimeout(activateEvenDom, 2000); // start walking	
+		// player flickers when hit by bomb ====================================
+		for (var i = 0; i < 8; i++) // 4th Step loop 8 times
+		{
+			setTimeout(() => {
+				var editCharacterClass = document.getElementsByClassName('character')[0];
+				if (editCharacterClass.style.opacity === "0.5" || editCharacterClass.style.top === editCharacterClass.offsetTop + 5 + "px" || editCharacterClass.style.left === editCharacterClass.offsetLeft + 5 + "px") { //2nd step checking if all true
+					editCharacterClass.style.opacity = "1"; //3rd step restore to initial 
+					editCharacterClass.style.top = editCharacterClass.offsetTop - 5 + "px";
+					editCharacterClass.style.left = editCharacterClass.offsetLeft - 5 + "px";
+				} else {
+					editCharacterClass.style.opacity = "0.5";
+					editCharacterClass.style.top = editCharacterClass.offsetTop + 10 + "px"; //1st step
+					editCharacterClass.style.left = editCharacterClass.offsetLeft + 5 + "px";
+				}
+			}, i * 250); // 5th step after 8 * 250 = 2000 ms / 2 sec
+		}
+	} //end =====================================================================
 
 	else {
 		// gameover
@@ -323,23 +355,23 @@ function moveBomb() {
 			// console.log("top value is" + bombTop);
 			//random bomb speed =================================================================================
 			// I'm planning to do a Math.Ceil(Math.Random() * level)
-			
+
 			// console.log("My speed is:" + randomBombSpeed);
 			// console.log("value bombbTop" + bombTop);
 			// console.log("value bombbBottom" + bombBottom);
 
-			var randomBombSpeed = Math.ceil(Math.random() * level + 0.5);
+			var randomBombSpeed = Math.ceil(Math.random() * level + 0.75);
 
 			bombs[i].style.left = bombLeft - randomBombSpeed + "px";
 
-			for (var j = 0; j < directions.length; j++) {
-				bombs[i].style.top = bombTop - directions[j] + "px";
-				console.log(directions[j]);
-			}
-			
+			// for (var j = 0; j < directions.length; j++) {
+			// 	bombs[i].style.top = bombTop - directions[j] + "px";
+			// 	console.log(directions[j]);
+			// }
 
-			var testBomb = bombs[i].style.top;
-			console.log(testBomb);
+
+			// var testBomb = bombs[i].style.top;
+			// console.log(testBomb);
 
 
 			// end random direction ====================================================================
@@ -365,6 +397,7 @@ function moveBomb() {
 			hiddenScore++;
 			elScore.innerHTML = "Your Score: " + score;
 			levelUp(); //call function
+			addLife();
 
 		}
 
