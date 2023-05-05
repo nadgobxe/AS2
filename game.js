@@ -16,7 +16,8 @@ var conditionTrigger = 0;
 var score = 0;
 var level = 1;
 var hiddenScore = 0; //increase level
-var directions = [-3 - 2, -1, 0, + 1, + 2, + 3];
+var addLifeStore = 0; //add life
+var directions = [-0.75, - 0.5, -0.25, 0, +0.25, +0.5, +0.75];
 
 function keyup(event) {
 	var player = document.getElementById('player');
@@ -128,6 +129,7 @@ function levelUp() {
 	}
 }
 
+
 // end ==============================================================================================
 // create Scoring system GUI functional and counting the bombs avoided ==============================
 function scoreCount() {
@@ -170,7 +172,7 @@ function addLife() {
 	var li = document.createElement('li');
 	// console.log("this is hiddenScore" + hiddenScore);
 	// console.log("this is li length" + currentLi.length);
-	if ((hiddenScore == 9) && (currentLi.length < 3)) {
+	if ((addLifeStore == 50) && (currentLi.length < 3)) {
 		healthBar.appendChild(li);
 		// console.log("addLife active");
 
@@ -298,9 +300,11 @@ function restartGame() {
 
 	var elScore = document.getElementsByClassName('score')[0];
 	elScore.innerHTML = "Your Score: 0";
+
 	score = 0;
 	level = 1;
 	hiddenScore = 0;
+	addLifeStore = 0; 
 }
 // end ==============================================================================================
 
@@ -364,10 +368,10 @@ function moveBomb() {
 
 			bombs[i].style.left = bombLeft - randomBombSpeed + "px";
 
-			// for (var j = 0; j < directions.length; j++) {
-			// 	bombs[i].style.top = bombTop - directions[j] + "px";
-			// 	console.log(directions[j]);
-			// }
+			for (var j = 0; j < directions.length; j++) {
+				bombs[i].style.top = bombTop - directions[j] + "px";
+				console.log(directions[j]);
+			}
 
 
 			// var testBomb = bombs[i].style.top;
@@ -395,6 +399,7 @@ function moveBomb() {
 			var elScore = document.getElementsByClassName('score')[0]; /////  SCORE COUNTER =========
 			score++;
 			hiddenScore++;
+			addLifeStore++;
 			elScore.innerHTML = "Your Score: " + score;
 			levelUp(); //call function
 			addLife();
