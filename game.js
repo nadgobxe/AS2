@@ -104,6 +104,45 @@ function keydown(event) {
 	}
 }
 
+
+// desgin score table ===============================================================================
+function createForm() {
+
+var inputForm = document.createElement('form');
+inputButton.style.top = "50%";
+inputButton.style.left = "50%";
+inputButton.style.backgroundColor = "#ccc";
+inputButton.style.zIndex = "1000";
+inputButton.style.fontFamily = 'Anton';
+inputButton.style.fontSize = "2em";
+inputButton.style.textShadow = "2px 2px 2px #000";
+inputButton.style.color = 'white';
+inputButton.style.boxShadow = '4px 4px 4px #000';
+inputButton.style.borderRadius = '20px';
+
+
+
+
+inputForm.setAttribute("action", "/submit");
+
+var createLabel = document.createElement('label');
+createLabel.textContent = 'Name: ';
+
+var inputElement = document.createElement('input');
+inputElement.setAttribute('type', 'text');
+inputElement.setAttribute('name', 'name');
+inputElement.setAttribute('id', 'name');
+
+
+var inputButton = document.createElement('button');
+inputButton.setAttribute('type', 'submit');
+inputButton.innerHTML = 'Save my Score';
+
+
+}
+// end ==============================================================================================
+
+
 //design level bar ==================================================================================
 function designLevel() {
 	var elLevel = document.createElement('div');
@@ -262,8 +301,21 @@ function gameOver() {
 	gameOver.style.display = "block";
 	gameOver.classList.remove('start');
 	gameOver.classList.add('gameover');
-	gameOver.innerHTML = "Game Over <br> Try Again!";
-	gameOver.addEventListener('click', restartGame);
+	gameOver.innerHTML = "Game Over";
+
+	// create restartButton
+	var restartButton = document.createElement('div');
+	restartButton.className = 'start playAgain';	
+	restartButton.style.left = "50%";
+	restartButton.style.top = "60%";
+	restartButton.style.position = 'absolute';
+
+	restartButton.innerHTML = 'Play Again?';
+	document.body.appendChild(restartButton);
+
+	var restartButtonSelect = document.getElementsByClassName('playAgain')[0];
+
+	restartButton.addEventListener('click', restartGame);
 
 	bombClearOut(); // should clear-out all the bombs when gameover
 }
@@ -274,6 +326,9 @@ function restartGame() {
 	var gameOver = document.getElementsByClassName('gameover')[0];
 	gameOver.classList.add('start');
 	gameOver.style.display = "none";
+	
+	var restartButtonSelect = document.getElementsByClassName('playAgain')[0];
+	restartButtonSelect.style.display = 'none';
 
 	var player = document.getElementById('player'); // restore player position and class
 	player.className = 'character stand';
