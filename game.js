@@ -295,6 +295,7 @@ randomExplode(); // call function first time
 // end ==============================================================================================
 
 // gameOver =========================================================================================
+// gameOver =========================================================================================
 function gameOver() {
 	var gameOver = document.getElementsByClassName('start')[0]; // game over bar with dead character
 
@@ -314,12 +315,12 @@ function gameOver() {
 	document.body.appendChild(restartButton);
 
 	var restartButtonSelect = document.getElementsByClassName('playAgain')[0];
+	console.log(restartButtonSelect);
 
-	restartButton.addEventListener('click', restartGame);
+	restartButtonSelect.addEventListener('click', restartGame);
 
 	bombClearOut(); // should clear-out all the bombs when gameover
 }
-//end ===============================================================================================
 
 // restart game =====================================================================================
 function restartGame() {
@@ -359,7 +360,8 @@ function restartGame() {
 	score = 0;
 	level = 1;
 	hiddenScore = 0;
-	addLifeStore = 0; 
+	addLifeStore = 0;
+	// startGame();
 }
 // end ==============================================================================================
 
@@ -541,7 +543,6 @@ function myLoadFunction() {
 	for (var i = 0; i < tanks.length; i++) {
 		tanks[i].style.display = "none";
 	}
-
 }
 
 document.addEventListener('DOMContentLoaded', myLoadFunction);
