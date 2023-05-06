@@ -129,7 +129,6 @@ function levelUp() {
 	}
 }
 
-
 // end ==============================================================================================
 // create Scoring system GUI functional and counting the bombs avoided ==============================
 function scoreCount() {
@@ -174,6 +173,7 @@ function addLife() {
 	// console.log("this is li length" + currentLi.length);
 	if ((addLifeStore == 50) && (currentLi.length < 3)) {
 		healthBar.appendChild(li);
+		addLifeStore = 0; // reset addlifeStore to 0
 		// console.log("addLife active");
 
 	}
