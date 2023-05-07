@@ -104,91 +104,6 @@ function keydown(event) {
 	}
 }
 
-
-// local storage ====================================================================================
-// var form = document.querySelector('form');
-// form.addEventListener('submit', function(event) {
-//   event.preventDefault(); // prevent form submission
-
-//   var playerName = document.getElementById('name').value;
-//   var leaderboard = 100; // replace with actual score
-
-//   // Save name and score to local storage
-//   localStorage.setItem('name', playerName);
-//   localStorage.setItem('score', leaderboard);
-
-//   // Redirect to score page or display success message
-// });
-// end=====================================================================================================
-
-// desgin score table ===============================================================================
-function createForm() {
-	var form = document.createElement('form');
-	form.style.top = "40%";
-	form.style.left = "50%";
-	form.style.position = "absolute";
-	form.style.transform = "translate(-50%, -50%)";
-	form.style.backgroundColor = "#ccc";
-	form.style.backgroundImage = 'url(images/trophy.png)'
-	form.style.backgroundRepeat = 'no-repeat';
-	form.style.backgroundPosition = '50% 210%';
-	form.style.backgroundSize = '32px'
-	form.style.padding = "0.5em";
-	form.style.zIndex = "1000";
-	form.style.fontFamily = 'Anton';
-	form.style.fontSize = "2em";
-	form.style.textShadow = "2px 2px 2px #000";
-	form.style.color = 'white';
-	form.style.boxShadow = '4px 4px 4px #000';
-	form.style.borderRadius = '20px';
-	document.body.appendChild(form);
-  
-	var nameLabel = document.createElement('label');
-	nameLabel.textContent = 'Name: ';
-	nameLabel.style.marginRight = '10px';
-	form.appendChild(nameLabel);
-  
-	var nameInput = document.createElement('input');
-	nameInput.setAttribute('type', 'text');
-	nameInput.setAttribute('name', 'name');
-	nameInput.setAttribute('id', 'name');
-	nameInput.style.padding = '5px';
-	nameInput.style.borderRadius = '5px';
-	nameInput.style.border = 'none';
-	nameInput.style.marginRight = '10px';
-	form.appendChild(nameInput);
-  
-	var scoreInput = document.createElement('input');
-	scoreInput.setAttribute('type', 'hidden');
-	scoreInput.setAttribute('name', 'score');
-	scoreInput.setAttribute('id', 'score');
-	var newScore = document.getElementsByClassName('score')[0];
-	var parseNewScore = parseInt(newScore);
-	scoreInput.value = parseNewScore;
-	form.appendChild(scoreInput);
-  
-	var submitButton = document.createElement('button');
-	submitButton.setAttribute('type', 'submit');
-	submitButton.innerHTML = 'Save my Score';
-	submitButton.style.padding = '5px 10px';
-	submitButton.style.borderRadius = '5px';
-	submitButton.style.backgroundColor = '#ff6347';
-	submitButton.style.border = 'none';
-	submitButton.style.color = 'white';
-	form.appendChild(submitButton);
-  
-	form.addEventListener('submit', function() {
-	  
-	  var name = document.getElementById('name').value;
-  
-	  localStorage.setItem('name', name);
-	  localStorage.setItem('score', score);
-  
-	});
-  }
-// end ==============================================================================================
-
-
 //design level bar ==================================================================================
 function designLevel() {
 	var elLevel = document.createElement('div');
@@ -348,36 +263,7 @@ function gameOver() {
 	gameOver.style.display = "block";
 	gameOver.classList.remove('start');
 	gameOver.classList.add('gameover');
-	gameOver.innerHTML = "Play Again?";
-
-	// var styles = window.getComputedStyle(gameOverMessage, ':before'); // source: https://stackoverflow.com/questions/38872290/how-to-get-pseudo-element
-	// // styles.setProperty('background-position', '0px -64px');
-
-
-	var gameOverMessage = document.createElement('div');
-	document.body.appendChild(gameOverMessage);
-	gameOverMessage.className = 'gameover-message';
-
-	gameOverMessage.style.top = "60%";
-	gameOverMessage.style.left = "50%";
-	gameOverMessage.style.width = "20vw";
-	gameOverMessage.style.backgroundColor = "#ccc";
-	gameOverMessage.style.zIndex = "1000";
-	gameOverMessage.style.textShadow = "2px 2px 2px #000";
-	gameOverMessage.style.color = 'white';
-	gameOverMessage.style.boxShadow = '4px 4px 4px #000';
-	gameOverMessage.style.borderRadius = '20px';
-	gameOverMessage.style.position = "absolute";
-	gameOverMessage.style.fontSize = "32px";
-	gameOverMessage.style.fontFamily = 'Anton';
-	gameOverMessage.style.marginLeft = '-10vw';
-	gameOverMessage.style.marginTop = '-1em';
-	gameOverMessage.style.cursor = 'pointer';
-	gameOverMessage.style.textAlign = 'center';
-	
-
-	gameOverMessage.textContent = ">>> Game Over <<<";
-
+	gameOver.innerHTML = "Game Over <br> Try Again!";
 	gameOver.addEventListener('click', restartGame);
 
 
@@ -390,6 +276,9 @@ function restartGame() {
 	var gameOver = document.getElementsByClassName('gameover')[0];
 	gameOver.classList.add('start');
 	gameOver.style.display = "none";
+	
+	var restartButtonSelect = document.getElementsByClassName('playAgain')[0];
+	restartButtonSelect.style.display = 'none';
 
 	var removeGameOver = document.getElementsByClassName('gameover-message')[0];
 	removeGameOver.classList.remove('gameover-message');
@@ -424,7 +313,7 @@ function restartGame() {
 	score = 0;
 	level = 1;
 	hiddenScore = 0;
-	addLifeStore = 0;
+	addLifeStore = 0; 
 }
 // end ==============================================================================================
 
