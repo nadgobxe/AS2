@@ -104,6 +104,113 @@ function keydown(event) {
 	}
 }
 
+
+
+// desgin score table ===============================================================================
+function createForm() {
+	var form = document.createElement('form');
+	form.style.top = "40%";
+	form.style.left = "50%";
+	form.style.position = "absolute";
+	form.style.transform = "translate(-50%, -50%)";
+	form.style.backgroundColor = "#ccc";
+	form.style.backgroundImage = 'url(images/trophy.png)'
+	form.style.backgroundRepeat = 'no-repeat';
+	form.style.backgroundPosition = '50% 210%';
+	form.style.backgroundSize = '32px'
+	form.style.padding = "0.5em";
+	form.style.zIndex = "1000";
+	form.style.fontFamily = 'Anton';
+	form.style.fontSize = "2em";
+	form.style.textShadow = "2px 2px 2px #000";
+	form.style.color = 'white';
+	form.style.boxShadow = '4px 4px 4px #000';
+	form.style.borderRadius = '20px';
+	document.body.appendChild(form);
+  
+	var nameLabel = document.createElement('label');
+	nameLabel.textContent = 'Name: ';
+	nameLabel.style.marginRight = '10px';
+	form.appendChild(nameLabel);
+  
+	var nameInput = document.createElement('input');
+	nameInput.setAttribute('type', 'text');
+	nameInput.setAttribute('name', 'name');
+	nameInput.setAttribute('id', 'name');
+	nameInput.style.padding = '5px';
+	nameInput.style.borderRadius = '5px';
+	nameInput.style.border = 'none';
+	nameInput.style.marginRight = '10px';
+	form.appendChild(nameInput);
+  
+	var scoreInput = document.createElement('input');
+	scoreInput.setAttribute('type', 'hidden');
+	scoreInput.setAttribute('name', 'score');
+	scoreInput.setAttribute('id', 'score');
+	var newScore = document.getElementsByClassName('score')[0];
+	var parseNewScore = parseInt(newScore);
+	scoreInput.value = parseNewScore;
+	form.appendChild(scoreInput);
+  
+	var submitButton = document.createElement('button');
+	submitButton.setAttribute('type', 'submit');
+	submitButton.innerHTML = 'Save my Score';
+	submitButton.style.padding = '5px 10px';
+	submitButton.style.borderRadius = '5px';
+	submitButton.style.backgroundColor = '#ff6347';
+	submitButton.style.border = 'none';
+	submitButton.style.color = 'white';
+	form.appendChild(submitButton);
+  
+	form.addEventListener('submit', function() {
+	  
+	  var name = document.getElementById('name').value;
+  
+	  localStorage.setItem('name', name);
+	  localStorage.setItem('score', score);
+  
+	});
+  }
+=======
+// desgin score table ===============================================================================
+function createForm() {
+
+var inputForm = document.createElement('form');
+inputButton.style.top = "50%";
+inputButton.style.left = "50%";
+inputButton.style.backgroundColor = "#ccc";
+inputButton.style.zIndex = "1000";
+inputButton.style.fontFamily = 'Anton';
+inputButton.style.fontSize = "2em";
+inputButton.style.textShadow = "2px 2px 2px #000";
+inputButton.style.color = 'white';
+inputButton.style.boxShadow = '4px 4px 4px #000';
+inputButton.style.borderRadius = '20px';
+
+
+
+
+inputForm.setAttribute("action", "/submit");
+
+var createLabel = document.createElement('label');
+createLabel.textContent = 'Name: ';
+
+var inputElement = document.createElement('input');
+inputElement.setAttribute('type', 'text');
+inputElement.setAttribute('name', 'name');
+inputElement.setAttribute('id', 'name');
+
+
+var inputButton = document.createElement('button');
+inputButton.setAttribute('type', 'submit');
+inputButton.innerHTML = 'Save my Score';
+
+
+}
+>>>>>>> 1ee44760b399865a76c80466068c6b12467af7ea
+// end ==============================================================================================
+
+
 //design level bar ==================================================================================
 function designLevel() {
 	var elLevel = document.createElement('div');
@@ -263,8 +370,56 @@ function gameOver() {
 	gameOver.style.display = "block";
 	gameOver.classList.remove('start');
 	gameOver.classList.add('gameover');
-	gameOver.innerHTML = "Game Over <br> Try Again!";
+<<<<<<< HEAD
+	gameOver.innerHTML = "Play Again?";
+
+	// var styles = window.getComputedStyle(gameOverMessage, ':before'); // source: https://stackoverflow.com/questions/38872290/how-to-get-pseudo-element
+	// // styles.setProperty('background-position', '0px -64px');
+
+
+	var gameOverMessage = document.createElement('div');
+	document.body.appendChild(gameOverMessage);
+	gameOverMessage.className = 'gameover-message';
+
+	gameOverMessage.style.top = "60%";
+	gameOverMessage.style.left = "50%";
+	gameOverMessage.style.width = "20vw";
+	gameOverMessage.style.backgroundColor = "#ccc";
+	gameOverMessage.style.zIndex = "1000";
+	gameOverMessage.style.textShadow = "2px 2px 2px #000";
+	gameOverMessage.style.color = 'white';
+	gameOverMessage.style.boxShadow = '4px 4px 4px #000';
+	gameOverMessage.style.borderRadius = '20px';
+	gameOverMessage.style.position = "absolute";
+	gameOverMessage.style.fontSize = "32px";
+	gameOverMessage.style.fontFamily = 'Anton';
+	gameOverMessage.style.marginLeft = '-10vw';
+	gameOverMessage.style.marginTop = '-1em';
+	gameOverMessage.style.cursor = 'pointer';
+	gameOverMessage.style.textAlign = 'center';
+	
+
+	gameOverMessage.textContent = ">>> Game Over <<<";
+
 	gameOver.addEventListener('click', restartGame);
+=======
+	gameOver.innerHTML = "Game Over";
+
+	// create restartButton
+	var restartButton = document.createElement('div');
+	restartButton.className = 'start playAgain';	
+	restartButton.style.left = "50%";
+	restartButton.style.top = "60%";
+	restartButton.style.position = 'absolute';
+
+	restartButton.innerHTML = 'Play Again?';
+	document.body.appendChild(restartButton);
+
+	var restartButtonSelect = document.getElementsByClassName('playAgain')[0];
+	console.log(restartButtonSelect);
+
+	restartButtonSelect.addEventListener('click', restartGame);
+>>>>>>> 1ee44760b399865a76c80466068c6b12467af7ea
 
 
 	bombClearOut(); // should clear-out all the bombs when gameover
@@ -313,7 +468,11 @@ function restartGame() {
 	score = 0;
 	level = 1;
 	hiddenScore = 0;
-	addLifeStore = 0; 
+	addLifeStore = 0;
+<<<<<<< HEAD
+=======
+	// startGame();
+>>>>>>> 1ee44760b399865a76c80466068c6b12467af7ea
 }
 // end ==============================================================================================
 
