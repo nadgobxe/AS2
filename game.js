@@ -6,8 +6,11 @@ var lastPressed = false;
 
 var player = document.getElementById('player');
 var tanks = document.getElementsByClassName('tank');
-var bombs = document.getElementsByClassName('bomb');
 var start = document.getElementsByClassName('start')[0];
+var bombs = document.getElementsByClassName('bomb');
+
+var timeoutTank = 0;
+var timeoutBomb = 0;
 
 function keyup(event) {
 	var player = document.getElementById('player');
@@ -90,13 +93,63 @@ function keydown(event) {
 		downPressed = true;
 	}
 }
+function explosion(bomb) {
+	var explosion = document.createElement('div');
+	explosion.classList.add('explosion');
+	bomb.appendChild(explosion);
 
+	explosion.style.top = bomb.offsetTop + 'px';
+	explosion.style.left = bomb.offsetLeft + 'px';
+
+	var bombsParent = bomb.parentNode;
+	bombsParent.removeChild(bomb);
+
+	setTimeout(function () {
+		var explosionParent = explosion.parentNode;
+		explosionParent.removeChild(explosion);
+	}, 2000)
+
+
+}
+
+function moveBomb(bomb) {
+	var bombLeft = bomb.offsetLeft;
+
+	if (bombLeft > 0) {
+		bomb.style.left = bombLeft - 1 + 'px';
+	} else {
+		explosion(bomb);
+	}
+}
+
+function addBomb(tank) {
+	var bombs = document.createElement('div');
+	bombs.classList.add('bomb');
+	document.body.appendChild(bombs);
+	bombs.style.top = tank.offsetTop + 10 + 'px';
+	bombs.style.left = tank.offsetLeft + 'px';
+	bombs.style.zIndex = 2;
+}
+
+function tanksSpawn(tank) {
+	var randomPointY = (Math.floor(Math.random() * window.innerHeight));
+	tank.style.top = randomPointY + 68 + 'px';
+
+	var tankTopValue = tank.style.top;
+	var parseTankTopValue = parseInt(tankTopValue);
+
+	if (window.innerHeight < parseTankTopValue + 68) { //avoid tank going off from the canvas
+		tank.style.top = randomPointY - 68 + "px";
+	}
+
+	addBomb(tank); // call bombs
+}
 
 function myLoadFunction() {
 
 	start.addEventListener('click', startGame);
-	
-	for (var i = 0; tanks.length; i++) {
+
+	for (var i = 0; i < tanks.length; i++) {
 		tanks[i].style.display = 'none';
 	}
 
@@ -108,6 +161,25 @@ function startGame() {
 	document.addEventListener('keydown', keydown);
 	document.addEventListener('keyup', keyup);
 	start.style.display = 'none';
+
+	for (var i = 0; i < tanks.length; i++) {
+		tanks[i].style.display = 'block';
+	}
+	timeoutTank = setInterval(function () {
+		for (var i = 0; i < tanks.length; i++) {
+			tanksSpawn(tanks[i]);
+		}
+	}, 3000);
+
+	timeoutBomb = setInterval(function () {
+
+		for (var i = 0; i < bombs.length; i++) {
+			var newBombs = bombs[i];
+			moveBomb(newBombs);
+		}
+	}, 10);
+
+
 }
 
 document.addEventListener('DOMContentLoaded', myLoadFunction);
