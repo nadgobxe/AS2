@@ -20,8 +20,11 @@ var hiddenScore = 0; //increase level
 var addLifeStore = 0; //add life
 
 var directions = 0;
-wayBomb = [-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75];
-var operators = ['+', '-'];
+var wayBomb = [-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75];
+var nameS = [];
+var scoreS = [];
+// localStorage.clear();
+
 
 function keyup(event) {
 	var player = document.getElementById('player');
@@ -119,8 +122,8 @@ callLeaderboard();
 
 // display leaderboard
 function displayLeaderboard() {
-	var localName = localStorage.getItem('name');
-	var localScore = localStorage.getItem('score');
+	var localName = JSON.parse(localStorage.getItem('name'));
+	var localScore = JSON.parse(localStorage.getItem('score'));
 
 	var createLeaderboard = document.createElement('div');
 	createLeaderboard.classList.add('leaderboard');
@@ -253,10 +256,11 @@ function createForm() {
 
 	form.addEventListener('submit', function () {
 
-		var name = document.getElementById('name').value;
-		var score = document.getElementById('score').value;
-		localStorage.setItem('name', name);
-		localStorage.setItem('score', score);
+		nameS = document.getElementById('name').value;
+		scoreS = document.getElementById('score').value;
+		
+		localStorage.setItem('name', JSON.stringify(nameS));
+		localStorage.setItem('score', JSON.stringify(scoreS));
 
 	});
 }
