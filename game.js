@@ -7,6 +7,7 @@ var lastPressed = false;
 var selectStart = document.getElementsByClassName('start')[0];
 var tanks = document.getElementsByClassName('tank');
 var bombs = document.getElementsByClassName('bomb');
+var player = document.getElementById('player');
 
 var timeoutBomb = 0;
 
@@ -34,46 +35,76 @@ function keyup(event) {
 
 
 function move() {
-	var player = document.getElementById('player');
+
 	var positionLeft = player.offsetLeft;
 	var positionTop = player.offsetTop;
-	if (downPressed) {
+	var positionBottom = positionTop + player.offsetHeight;
+	var tankLeft = tanks[0].offsetLeft;
+	var positionRight = positionLeft + player.offsetWidth;
+
+	// console.log("Left" + positionLeft);
+	// // console.log("Top" + positionTop);
+	// // console.log("Right" + positionRight);
+	// // console.log("Bottom" + positionBottom);
+	// console.log(windowWidth);
+	// console.log(tankLeft);
+
+	if (downPressed == true) {
 		var newTop = positionTop + 1;
-
-		player.style.top = newTop + 'px';
-
-		if (leftPressed == false) {
-			if (rightPressed == false) {
-				player.className = 'character walk down';
-			}
-		}
+		var element = document.elementFromPoint(positionLeft, newTop + 46); /* Detect position X/Y axis and return the top element at the specified coordinates. In our case, we would like to find when we collide with the 'cactus' class. To do that, we have to check for element.classList.contains('cactus') */
+		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false && positionBottom < (windowHeight - 5)) {
+			player.style.top = newTop + 'px';
+		}  
+		player.className = 'character walk down';
 	}
-	if (upPressed) {
+	if (upPressed == true) {
 		var newTop = positionTop - 1;
-
-		player.style.top = newTop + 'px';
-
-		if (leftPressed == false) {
-			if (rightPressed == false) {
-				player.className = 'character walk up';
-			}
+		var element = document.elementFromPoint(positionLeft, newTop);
+		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false && positionTop > 5) {
+			player.style.top = newTop + 'px';
 		}
+		player.className = 'character walk up';
 	}
-	if (leftPressed) {
+	if (leftPressed == true) {
 		var newLeft = positionLeft - 1;
-
-		player.style.left = newLeft + 'px';
-
+		var element = document.elementFromPoint(newLeft, positionTop);
+		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false && positionLeft > 5) {
+			player.style.left = newLeft + 'px';
+		}
 		player.className = 'character walk left';
 	}
-	if (rightPressed) {
+	if (rightPressed == true) {
 		var newLeft = positionLeft + 1;
-
-		player.style.left = newLeft + 'px';
+		var element = document.elementFromPoint(newLeft + 32, positionTop);
+		if (element.classList.contains('cactus') == false && element.classList.contains('tank') == false && positionRight < (tankLeft - 10)) {
+			player.style.left = newLeft + 'px';
+		}
 
 		player.className = 'character walk right';
 	}
 
+	if (spaceBarPressed) {
+
+		weapon.style.display = 'block';
+		addArrow();
+		timeoutArrow = setInterval(moveArrow, 10);
+
+		if (!downPressed || !upPressed || !leftPressed || !rightPressed) {
+
+			player.className = 'character stand ' + lastPressed + ' fire';
+		}
+
+		if (downPressed || upPressed || leftPressed || rightPressed) {
+			player.className = 'character fire walk ' + lastPressed;
+		}
+
+		removeEventDom();
+		setTimeout(function () {
+			weapon.style.display = 'none';
+			weapon.classList.remove('fire');
+			activateEvenDom();
+		}, 500)
+	}
 }
 
 
@@ -171,6 +202,20 @@ function startGame() {
 	document.addEventListener('keyup', keyup);
 	timeoutTanks = setInterval(spawnTanks, 5000);
 	reuseableForLoop(tanks, 'block');
+}
+
+function removeEventDom() { 
+	document.removeEventListener('keyup', keyup);
+	document.removeEventListener('keydown', keydown);
+	upPressed = false;
+	downPressed = false;
+	leftPressed = false;
+	rightPressed = false;
+	spaceBarPressed = false;
+}
+function activateEvenDom() {
+	document.addEventListener('keyup', keyup);
+	document.addEventListener('keydown', keydown);
 }
 
 function myLoadFunction() {
